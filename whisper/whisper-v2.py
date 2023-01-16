@@ -4,11 +4,14 @@ import wave
 import sys
 import numpy as np
 
+import warnings
+warnings.filterwarnings('ignore')
+
 
 MODEL = "openai/whisper-base"
 #path = '../data/input_filippo_en.wav'
 chunk = 2048
-recording_seconds = 5
+recording_seconds = 2
 
 print("################### Loading Model ###################")
 model = WhisperForConditionalGeneration.from_pretrained(MODEL)
