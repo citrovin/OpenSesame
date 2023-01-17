@@ -3,11 +3,15 @@ import librosa
 import numpy as np
 
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, SimpleRNN, InputLayer
+from tensorflow_addons.optimizers import AdamW
+
 from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
 
+import wandb
+from wandb.keras import WandbMetricsLogger, WandbModelCheckpoint
 
 
 # %%
@@ -31,11 +35,6 @@ features2 = extract_features("./data/sample2.wav")
 features3 = extract_features("./data/sample3.wav")
 features4 = extract_features("./data/sample4.wav")
 
-# labels1 = np.zeros(1)
-# labels2 = np.zeros(1)
-# labels3 = np.ones(1)
-# labels4 = np.ones(1)
-
 features1 = np.swapaxes(features1, 0, 1)
 features2 = np.swapaxes(features2, 0, 1)
 features3 = np.swapaxes(features3, 0, 1)
@@ -45,8 +44,6 @@ labels1 = np.zeros(469)
 labels2 = np.zeros(469)
 labels3 = np.ones(469)
 labels4 = np.ones(469)
-
-# tensor1 = [1, ]
 
 features = [features1, features2, features3, features4]
 labels = [labels1, labels2, labels3, labels4]
@@ -62,27 +59,49 @@ labels = np.array(labels)
 # %%
 # Define the model
 model = Sequential()
-model.add(Dense(256, activation='relu', input_shape=(469,40)))
-model.add(Dropout(0.5))
+model.add(Dense(256, activation="relu"))
+model.add(Dropout(0.2))
+model.add(Dense(128, activation="relu"))
+model.add(Dropout(0.2))
+model.add(Dense(64, activation="relu"))
+model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 
+
 # Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
 
-model.summary()
-#[print(i.shape, i.dtype) for i in model.inputs]
-#[print(o.shape, o.dtype) for o in model.outputs]
-#[print(l.name, l.input_shape, l.dtype) for l in model.layers]
+# start a new wandb run to track this script
+run = wandb.init(
+    # set the wandb project where this run will be logged
+    project="OpenSesame",
+    entity="juzay_and_co",
+    config = model.get_config(),
+    name = "Dense 2 Hidden Layers (469 => 256 => 128 => 1) | 75 Epochs"
+)
 
-
+#model.summary()
 
 # Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    features, 
+    labels, 
+    test_size=0.2, 
+    random_state=42
+    )
 
-#print(features1)
-# Train the model
-history = model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test))
 
-
-# SVM
 # %%
+
+# Train the model
+history = model.fit(
+    X_train, 
+    y_train, 
+    epochs=75, 
+    validation_data=(X_test, y_test),
+    callbacks=[
+        WandbMetricsLogger(log_freq=5),
+        WandbModelCheckpoint("models")]
+    )
+
+run.finish()
