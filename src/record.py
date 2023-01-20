@@ -22,11 +22,14 @@ def record_audio(filename):
 
 data_path = '../data/'
 
-time = datetime.now().strftime("%d_%m_%H_%M_%S")
+
 
 while True:
-    choice=int(input("\n 1.Record audio for positive training sample \n 2.Record audio for negative training sample\n 1.Record audio for positive validation sample \n 2.Record audio for negative validation sample\n"))
+
+    time = datetime.now().strftime("%d_%m_%H_%M_%S")
     file_path = data_path
+    
+    choice=int(input("\n 1.Record audio for positive training sample \n 2.Record audio for negative training sample\n 3.Record audio for positive validation sample \n 4.Record audio for negative validation sample\n"))
     if(choice==1):
         file_path += 'train/positive/pos_'
     elif(choice==2):
@@ -35,11 +38,13 @@ while True:
         file_path += 'validation/positive/pos_'
     elif(choice==4):
         file_path += 'validation/negative/neg_'
+    if(choice>4):
+        exit()
+
 
     filename = file_path + time + '.wav'
 
     # Record audio samples
     record_audio(filename)
-
-    if(choice>4):
-        exit()
+    
+    
