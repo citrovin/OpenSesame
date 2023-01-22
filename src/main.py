@@ -77,9 +77,6 @@ def read_files(dir_path):
 
 
 if __name__== "__main__" :
-    
-    # x_train, y_train, x_test, y_test = loadData(asTensor=True)
-    x_train, y_train, x_test, y_test = loadData(asTensor=False)
 
     # Constants. You can decrease the chunk if you want a faster loop (faster sample rate)
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved

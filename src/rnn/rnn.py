@@ -34,6 +34,12 @@ def extract_features(file_name, sample_rate):
 # %%
 # Extract features from audio samples
 
+# RNN
+x_train, y_train, x_test, y_test = loadData(asTensor=True)
+
+# Feed-Forward
+#x_train, y_train, x_test, y_test = loadData(asTensor=False)
+
 SAMPLE_RATE = None#int(22050)
 OUTPUT_DIR = "./models"
 EPOCHS = 50
