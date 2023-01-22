@@ -7,7 +7,7 @@ import wave
 
 import time
 import os
-from preprocess_data import loadData
+from preprocess_data import loadData, extract_features
 
 # call model
 def speaker_identification(
@@ -78,6 +78,7 @@ def read_files(dir_path):
 
 if __name__== "__main__" :
 
+    
     # Constants. You can decrease the chunk if you want a faster loop (faster sample rate)
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
@@ -123,3 +124,5 @@ if __name__== "__main__" :
             print(output)
             #save_wav('second',buffer2) #CHANGE to speaker identification
             buffer2=[]
+
+        # feature_vector = extract_features(fileName)
