@@ -64,17 +64,6 @@ features3_neg = np.swapaxes(features3_neg, 0, 1)
 features4_neg = np.swapaxes(features4_neg, 0, 1)
 features5_neg = np.swapaxes(features5_neg, 0, 1)
 
-# labels1_pos = np.ones(features1_pos.shape[0])
-# labels2_pos = np.ones(features1_pos.shape[0])
-# labels3_pos = np.ones(features1_pos.shape[0])
-# labels4_pos = np.ones(features1_pos.shape[0])
-
-# labels1_neg = np.zeros(features1_pos.shape[0])
-# labels2_neg = np.zeros(features1_pos.shape[0])
-# labels3_neg = np.zeros(features1_pos.shape[0])
-# labels4_neg = np.zeros(features1_pos.shape[0])
-# labels5_neg = np.zeros(features1_pos.shape[0])
-
 labels1_pos = np.ones(1)
 labels2_pos = np.ones(1)
 labels3_pos = np.ones(1)
@@ -115,10 +104,6 @@ labels = np.array([
 print(features.shape)
 print(labels.shape)
 
-# for i, elem in enumerate(features):
-#     print(f"Feature {i+1} shape: {elem.shape}")
-#     print(f"Label {i+1} shape: {labels[i].shape}\n")
-
 # %%
 # Define the model
 model = Sequential()
@@ -138,8 +123,6 @@ model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy']
 #     config = model.get_config(),
 #     name = "Dense 2 Hidden Layers (469 => 256 => 128 => 1) | 75 Epochs | Sample rate: sample_rate=int(22050/4)"
 # )
-
-#model.summary()
 
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(
@@ -162,6 +145,9 @@ history = model.fit(
     
 )
 
+
+name = f"rnn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v1"
+# Plot the Accuracy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
 plt.title('model accuracy')
@@ -170,7 +156,9 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 
-# "Loss"
+#plt.savefig(f'./plots/{name}_loss.png')
+
+# Plot the Loss
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 plt.title('model loss')
@@ -179,7 +167,7 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
 
-#plt.savefig('./loss_acc.png')
+#plt.savefig(f'./plots/{name}_loss.png')
 
 # callbacks=[
 #     WandbMetricsLogger(log_freq=5),
@@ -188,5 +176,4 @@ plt.show()
 
 # wandb.finish()
 
-name = f"rnn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v1"
 model.save(os.path.join(OUTPUT_DIR, name))

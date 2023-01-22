@@ -153,6 +153,10 @@ history = model.fit(
     
 )
 
+
+
+name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v3"
+# Plot accuarcy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
 plt.title('model accuracy')
@@ -160,8 +164,10 @@ plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
+#plt.savefig(f'./plots/{name}_acc.png')
 
-# "Loss"
+
+# Plot Loss
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 plt.title('model loss')
@@ -169,8 +175,7 @@ plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
-
-#plt.savefig('./loss_acc.png')
+#plt.savefig(f'./plots/{name}_loss.png')
 
 # callbacks=[
 #     WandbMetricsLogger(log_freq=5),
@@ -179,5 +184,4 @@ plt.show()
 
 # wandb.finish()
 
-name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v3"
 model.save(os.path.join(OUTPUT_DIR, name))
