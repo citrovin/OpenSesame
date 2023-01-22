@@ -1,8 +1,19 @@
 from tensorflow import keras
+
 import librosa
 import numpy as np
+import pyaudio
+import wave
 
+import time
 import os
+
+def save_wav(name,buffer):
+        with wave.open(name+'.wav', 'wb') as f:
+            f.setnchannels(1)
+            f.setsampwidth(2)
+            f.setframerate(16000)
+            f.writeframes(b"".join(buffer))
 
 
 # Function to extract features from audio file
@@ -33,34 +44,38 @@ def read_files(dir_path):
 
 
 if __name__== "__main__" :
+    
+    # Constants. You can decrease the chunk if you want a faster loop (faster sample rate)
+    chunk = 2048
+    recording_seconds = 2
+    
 
-    SAMPLE_RATE = None
+    print("Opening stream..")
+    mic = pyaudio.PyAudio()
+    stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=chunk)
+    stream.start_stream()
 
-    file_paths = read_files('./data/validation/')
 
-    '''features1 = extract_features("./data/validation/sample1.wav", sample_rate=SAMPLE_RATE) # positive philipp
-    features2 = extract_features("./data/validation/sample2.wav", sample_rate=SAMPLE_RATE) # negative philipp
-    features3 = extract_features("./data/validation/sample3.wav", sample_rate=SAMPLE_RATE) # negative dalim
-    features4 = extract_features("./data/validation/sample4.wav", sample_rate=SAMPLE_RATE) # postive dalim
+    buffer1=[]
+    buffer2=[]
+    frame_num =int( ((16000 / chunk) * recording_seconds) )
+    print(frame_num)
 
-    features1 = np.swapaxes(features1, 0, 1)
-    features2 = np.swapaxes(features2, 0, 1)
-    features3 = np.swapaxes(features3, 0, 1)
-    features4 = np.swapaxes(features4, 0, 1)
+    i = 0
+    print("Let's go! Good job Filippo!")
+    while(1):
+        i+=1
+        data = stream.read(chunk)
+        buffer1.append(data)
+        buffer2.append(data)
+        print(i)
+      
+        if ((i+ frame_num//2)% frame_num == 0): #first slot
+            print("Saving first")
+            save_wav('first',buffer1)
+            buffer1=[]
 
-    features = [features1,features2,features3,features4]
-
-    model = keras.models.load_model('./feed-forward/models/dense-nn-srNone-epochs100-v3')
-
-    output1 = model.predict(features1)
-    output2 = model.predict(features2)
-    output3 = model.predict(features3)
-    output4 = model.predict(features4)
-
-    print(f"Output 1: {np.mean(output1)}")
-    print(f"Output 2: {np.mean(output2)}")
-    print(f"Output 3: {np.mean(output3)}")
-    print(f"Output 4: {np.mean(output4)}")
-'''
-
-    #print(model.summary())
+        if (i% frame_num == 0): #second slot
+            print("Saving second")
+            save_wav('second',buffer2)
+            buffer2=[]
