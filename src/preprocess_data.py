@@ -63,7 +63,8 @@ def calculate_delta(array):
     return deltas
 
 
-def extract_features(audio,rate):
+def extract_features(file):
+    rate,audio = read(file)
     mfcc_feature = mfcc.mfcc(audio,rate, 0.025, 0.01,20,nfft = 1200, appendEnergy = True)    
     mfcc_feature = preprocessing.scale(mfcc_feature)
     # print(mfcc_feature)
@@ -97,8 +98,7 @@ def createFeatureArray(files, label):
     # features = []
 
     for file in files:
-        sr,audio = read(file)
-        vector = extract_features(audio,sr)
+        vector = extract_features(file)
         # vector = extract_features(audio,sample_rate)
         # print(vector.shape)
         # vector = extract_mfcc(file_path+file+".wav")
@@ -121,8 +121,7 @@ def createFeatureTensor(files, label):
     vector_shape = None
 
     for file in files:
-        sr,audio = read(file)
-        vector = extract_features(audio,sr)
+        vector = extract_features(file)
         if len(features) == 0:
             vector_shape = vector.shape
         if vector_shape != vector.shape:
@@ -232,14 +231,12 @@ if __name__== "__main__" :
 
         if dir.find('train') != -1:
             if isinstance(arr.x_train, type(None)):
-                print('if')
                 arr.x_train = x
                 arr.y_train = y
                 arr.x_train_tensor = x_tensor
                 arr.y_train_tensor = y_tensor
             else:
-                print('else')
-                print(arr.x_train_tensor.shape, x_tensor.shape)
+                # print(arr.x_train_tensor.shape, x_tensor.shape)
                 arr.x_train = np.vstack([arr.x_train, x])
                 arr.y_train = np.append(arr.y_train, y)
                 arr.x_train_tensor = np.vstack([arr.x_train_tensor, x_tensor])
