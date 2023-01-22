@@ -126,7 +126,7 @@ def createFeatureTensor(files, label):
         if len(features) == 0:
             vector_shape = vector.shape
         if vector_shape != vector.shape:
-            print("Vector had a different size")
+            print("Vector had a different size, file: ", file)
             continue
         features.append(vector)
         
@@ -157,10 +157,10 @@ class Files:
         self.x_test = open(validation_path+'x_test.csv', 'w')
         self.y_test = open(validation_path+'y_test.csv', 'w')
 
-        # self.x_train_tensor = open(training_path+'x_train_tensor.npy','w')
-        # self.y_train_tensor = open(training_path+'y_train_tensor.npy','w')
-        # self.x_test_tensor = open(validation_path+'x_test_tensor.csv', 'w')
-        # self.y_test_tensor = open(validation_path+'y_test_tensor.csv', 'w')
+        self.x_train_tensor = open(training_path+'x_train_tensor.npy','wb')
+        self.y_train_tensor = open(training_path+'y_train_tensor.npy','wb')
+        self.x_test_tensor = open(validation_path+'x_test_tensor.csv', 'wb')
+        self.y_test_tensor = open(validation_path+'y_test_tensor.csv', 'wb')
 
     def closeFiles(self):
         self.x_train.close()
@@ -173,13 +173,42 @@ class Files:
         # self.x_test_tensor.close()
         # self.y_test_tensor.close()
 
+class Arrays:
+    def __init__(self):
+        self.x_train = None
+        self.y_train = None
+        self.x_train_tensor = None
+        self.y_train_tensor = None
+
+        self.x_test = None
+        self.y_test = None
+        self.x_test_tensor = None
+        self.y_test_tensor = None
+
+def loadData(asTensor=True):
+
+    if asTensor:
+        x_train = np.load(training_path+'x_train_tensor.npy', allow_pickle=True)
+        y_train = np.load(training_path+'y_train_tensor.npy', allow_pickle=True)
+        x_test = np.load(validation_path+'x_test_tensor.npy', allow_pickle=True)
+        y_test = np.load(validation_path+'y_test_tensor.npy', allow_pickle=True)
+    else:
+        x_train = np.loadtxt(training_path+'x_train.csv', delimiter=',')
+        y_train = np.loadtxt(training_path+'y_train.csv', delimiter=',')
+        x_test = np.loadtxt(validation_path+'x_test.csv', delimiter=',')
+        y_test = np.loadtxt(validation_path+'y_test.csv', delimiter=',')
+
+    return (x_train, y_train, x_test, y_test)
+
 if __name__== "__main__" :
     f = Files()
     f.openFiles()
+    arr = Arrays()
 
     for dir in dirs:
         files = [dir+f for f in listdir(dir) if isfile(join(dir, f))]
-        print(files)
+        # print(len(files))
+        # print(dir)
         if dir.find('positive') != -1:
             label = 1
         else:
@@ -187,99 +216,59 @@ if __name__== "__main__" :
         
         x, y = createFeatureArray(files, label)
         x_tensor, y_tensor = createFeatureTensor(files, label)
-        print(x.shape, y.shape)
-        print(x_tensor.shape, y_tensor.shape)
+        # if len(x) == 0 and len(y) == 0:
+        #     x, y = createFeatureArray(files, label)
+        #     x_tensor, y_tensor = createFeatureTensor(files, label)
+        # else:
+        #     print("Append x")
+        #     tmp_x, tmp_y = createFeatureArray(files, label)
+        #     tmp_x_tensor, tmp_y_tensor = createFeatureTensor(files, label)
+        #     np.append(x,tmp_x)
+        #     np.append(y,tmp_y)
+        #     np.append(x_tensor,tmp_x_tensor)
+        #     np.append(y_tensor,tmp_y_tensor)
+        # print(x.shape, y.shape)
+        # print(x_tensor.shape, y_tensor.shape)
 
         if dir.find('train') != -1:
-            np.savetxt(f.x_train, x, delimiter=',')
-            np.savetxt(f.y_train, y, delimiter=',')
-            # np.savetxt(f.x_train_tensor, x_tensor.reshape(x_tensor.shape[0], -1), delimiter=',')
-            # np.savetxt(f.y_train_tensor, y_tensor.reshape(x_tensor.shape[0], -1), delimiter=',')
-            np.save(training_path+'x_train_tensor.npy', x_tensor)
-            np.save(training_path+'y_train_tensor.npy', y_tensor)
+            if isinstance(arr.x_train, type(None)):
+                print('if')
+                arr.x_train = x
+                arr.y_train = y
+                arr.x_train_tensor = x_tensor
+                arr.y_train_tensor = y_tensor
+            else:
+                print('else')
+                print(arr.x_train_tensor.shape, x_tensor.shape)
+                arr.x_train = np.vstack([arr.x_train, x])
+                arr.y_train = np.append(arr.y_train, y)
+                arr.x_train_tensor = np.vstack([arr.x_train_tensor, x_tensor])
+                arr.y_train_tensor = np.vstack([arr.y_train_tensor, y_tensor])
         else:
-            np.savetxt(f.x_test, x, delimiter=',')
-            np.savetxt(f.y_test, y, delimiter=',')
-            # np.savetxt(f.x_test_tensor, x_tensor.reshape(x_tensor.shape[0], -1), delimiter=',')
-            # np.savetxt(f.y_test_tensor, x_tensor.reshape(x_tensor.shape[0], -1), delimiter=',')
-            np.save(validation_path+'x_test_tensor.npy', x_tensor)
-            np.save(validation_path+'y_test_tensor.npy', y_tensor)
+            if isinstance(arr.x_test, type(None)):
+                arr.x_test = x
+                arr.y_test = y
+                arr.x_test_tensor = x_tensor
+                arr.y_test_tensor = y_tensor
+            else:
+                arr.x_test = np.vstack([arr.x_test, x])
+                arr.y_test = np.append(arr.y_test, y)
+                arr.x_test_tensor = np.vstack([arr.x_test_tensor, x_tensor])
+                arr.y_test_tensor = np.vstack([arr.y_test_tensor, y_tensor])
+
+    np.savetxt(f.x_train, arr.x_train, delimiter=',')
+    np.savetxt(f.y_train, arr.y_train, delimiter=',')
+    np.save(f.x_train_tensor, arr.x_train_tensor)
+    np.save(f.y_train_tensor, arr.y_train_tensor)
+
+    np.savetxt(f.x_test, arr.x_test, delimiter=',')
+    np.savetxt(f.y_test, arr.y_test, delimiter=',')
+    np.save(validation_path+'x_test_tensor.npy', arr.x_test_tensor)
+    np.save(validation_path+'y_test_tensor.npy', arr.y_test_tensor)
     
     f.closeFiles()
 
-    foo = np.loadtxt(training_path+'x_train.csv', delimiter=',')
-    # foo_reshape = foo.reshape(foo.shape[0], foo.shape[1] // 40, 40)
-    bar = np.load(training_path+'x_train_tensor.npy', allow_pickle=True)
-    print(foo.shape)
-    print(bar.shape)
-
-    # for dir in listdir(file_path):
-    #     for subdir in listdir(join(file_path, dir)):
-    #         print(join(file_path, dir, subdir))
-    #         for subsubdir in join(file_path, dir, subdir):
-    #             print(join(file_path, dir, subdir, subsubdir))
-    #             full_path = [f for f in subdir if isfile(join(file_path, dir, subdir, subsubdir, f))]
-    #         # for file in subdir if isfile(join(train_pos, file)):
-    #         #     full_path = join(file_path, dir, subdir, file)
-    #         print(full_path)
-    #         # print(full_path.find('positive') != -1)
-    # # for f in listdir()
-
-    train_pos_files = [train_pos+f for f in listdir(train_pos) if isfile(join(train_pos, f))]
-    train_neg_files = [train_neg+f for f in listdir(train_neg) if isfile(join(train_neg, f))]
-    val_pos_files = [val_pos+f for f in listdir(val_pos) if isfile(join(val_pos, f))]
-    val_neg_files = [val_neg+f for f in listdir(val_neg) if isfile(join(val_neg, f))]
-
-    # for file in train_pos_files:
-    # pos_x, pos_y = createFeatureArray(train_pos_files, 1)
-    # print(pos_x.shape)
-    # print(pos_y.shape)
-    # pos_x_tensor, pos_y_tensor = createFeatureTensor(train_pos_files, 1)
-    # print(np.array(pos_x_tensor).shape)
-    # print(pos_y_tensor.shape)
-
-    # neg_x, neg_y = createFeatureArray(train_pos_files, 0)
-    # print(neg_x.shape)
-    # print(neg_y.shape)
-    # neg_x_tensor, neg_y_tensor = createFeatureTensor(train_neg_files, 0)
-    # print(np.array(neg_x_tensor).shape)
-    # print(neg_y_tensor.shape)
-
-    # # for file in train_pos_files:
-    # pos_x, pos_y = createFeatureArray(train_pos_files, 1)
-    # print(pos_x.shape)
-    # print(pos_y.shape)
-    # pos_x_tensor, pos_y_tensor = createFeatureTensor(train_pos_files, 1)
-    # print(np.array(pos_x_tensor).shape)
-    # print(pos_y_tensor.shape)
-
-    # # for file in train_neg_files:
-    # neg_x, neg_y = createFeatureArray(train_pos_files, 0)
-    # print(neg_x.shape)
-    # print(neg_y.shape)
-    # neg_x_tensor, neg_y_tensor = createFeatureTensor(train_neg_files, 0)
-    # print(np.array(neg_x_tensor).shape)
-    # print(neg_y_tensor.shape)
-
-    # # open and save to csv file x_train
-    # # open and save to csv file y_train
-
-    # # for file in val_pos_files:
-    # pos_x_val, pos_y_val = createFeatureArray(val_pos_files, 0)
-    # print(pos_x_val.shape)
-    # print(pos_y_val.shape)
-    # pos_x_val_tensor, pos_y_val_tensor = createFeatureTensor(val_neg_files, 0)
-
-    # print(np.array(pos_x_val_tensor).shape)
-    # print(pos_y_val_tensor.shape)
-    # # for file in val_neg_files:
-    # neg_x, neg_y = createFeatureArray(train_pos_files, 0)
-    # print(neg_x.shape)
-    # print(neg_y.shape)
-    # neg_x_tensor, neg_y_tensor = createFeatureTensor(train_neg_files, 0)
-    # print(np.array(neg_x_tensor).shape)
-    # print(neg_y_tensor.shape)
-
+    x_train, y_train, x_test, y_test = loadData()
     
 
     # TODO shuffle training vectors before saving them?
