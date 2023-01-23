@@ -114,21 +114,42 @@ print("Accuracy: ", accuracy)
 # %%
 X, y, _, _ = loadData(asTensor=False)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
 
 clf = SVC()
 clf.fit(X_train, y_train)
 
-accuracy = clf.score(X_test, y_test)
+accuracy = clf.score(X_val, y_val)
 print("Accuracy: ", accuracy)
 
 #%%
 _, _, X_test, y_test = loadData(asTensor=False)
 
 result = clf.predict(X_test)
+print(result.shape)
 
+result_samples = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+true_samples = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+i = 0
+for k in range(result.shape[0]):
+    if k%197==0:
+        # print(i)
+        # result_samples[i] = (result[i*197:(i+1)*197])
+        result_samples[i] = np.mean(result[(i*197)+0:((i+1)*197)-0])
+        result_samples[i] = 1.0 if result_samples[i] > 0.15 else 0.0
+        # true_samples[i] = (y_test[i*197:(i+1)*197])
+        true_samples[i] = np.mean(y_test[i*197:(i+1)*197])
+
+        i+=1
+print(len(result_samples))
+print(len(true_samples))
+y_pred = np.array(result_samples)
+y_true = np.array(true_samples)
+print(y_pred)
+print(y_true)
 from sklearn.metrics import accuracy_score
-accuracy_score(result, y_test)
+accuracy_score(y_pred, y_true)
+# accuracy_score(result, y_test)
 # score = clf.score(result, y_test)
 
 
