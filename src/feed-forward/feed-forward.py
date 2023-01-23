@@ -1,6 +1,5 @@
 # %%
 import os
-import librosa
 import numpy as np
 
 from keras.models import Sequential
@@ -25,7 +24,7 @@ from utils.preprocess_data import loadData
 
 SAMPLE_RATE = 48000#None#int(16000)
 OUTPUT_DIR = "./models"
-EPOCHS = 37
+EPOCHS = 35
 
 # Import data
 x_train, y_train, x_test, y_test = loadData(asTensor=False)
@@ -75,7 +74,7 @@ history = model.fit(
     validation_data=(X_test, y_test)
 )
 
-name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5-negatives"
+name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v6-noise"
 # Plot accuarcy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])

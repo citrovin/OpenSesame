@@ -23,20 +23,22 @@ def speaker_identification(
     # save recorded files
     path_live_data = save_wav(name,buffer)
     # extract the features and create vectors
-    features = extract_features(path_live_data) # return a np.array with the features
-    #print(features.shape)
-    #features = np.swapaxes(features, 0, 1) # swap axis of features
-    #print(features.shape)
-    
-    # predict the speaker or not
-    # RNN
-    #output = model.predict(np.expand_dims(features, axis=0))
+    features = extract_features(path_live_data)
 
     # Feed-forward
-    output = model.predict(features)
-    # Choose if it is correct speaker
-    score = np.mean(output)
-    if score>THRESHOLD_NN:
+    output_nn = model[0].predict(features)
+    output_svm = model[1].predict(features)
+
+    score_nn = np.mean(output_nn)
+    score_svm = np.mean(output_svm)
+
+    score = np.mean([score_nn, score_svm])
+
+    THRESHOLD_TOTAL = np.mean([THRESHOLD_NN, THRESHOLD_SVM])
+
+    print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
+
+    if score>THRESHOLD_TOTAL:
         # print('OpenSesame')
         os.system('clear')
         with open('utils/open_lock.txt', 'r') as f:
@@ -55,7 +57,9 @@ def speaker_identification(
         #print(score)
         pass
     
-    return output
+    
+
+    return 0 #output
 
 # save the recorded data in 2 files, asynchronously and call the model on the saved file
 def save_wav(name,buffer):
@@ -78,13 +82,14 @@ if __name__== "__main__" :
     SAMPLE_RATE = 48000
     THRESHOLD_NN = 0.75
     THRESHOLD_SVM = 0.4    
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs37-v5-positives'
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs35-v6-noise'
     
-    # model = keras.models.load_model(MODEL_PATH)
-    print('Model loaded')
+    model_nn = keras.models.load_model(MODEL_PATH)
+    
     with open(r"svm/models/svm.pickle", "rb") as input_file:
-        model = pickle.load(input_file)
-    
+        model_svm = pickle.load(input_file)
+    print('Model loaded')
+
     print("Opening stream..")
     mic = pyaudio.PyAudio()
     stream = mic.open(format=pyaudio.paInt16, channels=1, rate=SAMPLE_RATE, input=True, frames_per_buffer=2*CHUNK )
@@ -111,15 +116,15 @@ if __name__== "__main__" :
         
         
         if ((i+ (2*frame_num)//3)% frame_num == 0):
-            output = speaker_identification(model=model, name='first', buffer=buffer1)
+            output = speaker_identification(model=[model_nn, model_svm], name='first', buffer=buffer1)
             buffer1=[]
 
         # save first recording in first file
         if ((i+ (1*frame_num)//3)% frame_num == 0):
-            output = speaker_identification(model=model, name='second', buffer=buffer2)
+            output = speaker_identification(model=[model_nn, model_svm], name='second', buffer=buffer2)
             buffer2=[]
         
         # save second recording in second file
         if (i% frame_num == 0):
-            output = speaker_identification(model=model, name='third', buffer=buffer3)
+            output = speaker_identification(model=[model_nn, model_svm], name='third', buffer=buffer3)
             buffer3=[]
