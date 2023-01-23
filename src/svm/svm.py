@@ -13,6 +13,8 @@ from importlib import reload # python 2.7 does not require this
 sys.path.append('../../src')
 from utils.preprocess_data import loadData
 
+import pickle
+
 #%%
 def calculate_delta(array):
    
@@ -65,55 +67,13 @@ def extract_mfcc(file_path):
     return mfccs
 
 
-#%%
-file_path = "/Users/Pipo/Documents/University/Business_Intelligence/OpenSesame/"
-
-files = ["sample1", "sample2","sample3", "sample4"]
-
-features = np.asarray(())
-for file in files:
-    # audio, sample_rate = librosa.load(file_path+file+".wav", sr=None)
-    sr,audio = read(file_path+file+".wav")
-    vector = extract_features(audio,sr)
-    # vector = extract_features(audio,sample_rate)
-    print(vector.shape)
-    # vector = extract_mfcc(file_path+file+".wav")
-    print(features.shape)
-    if features.size == 0:
-        features = vector
-    else:
-        features = np.vstack((features, vector))
-
-# labels1 = np.zeros(215)
-# labels2 = np.zeros(215)
-# labels3 = np.ones(215)
-# labels4 = np.ones(215)
-
-len_samples = 498
-labels = np.hstack([np.zeros(len_samples),np.zeros(len_samples),np.ones(len_samples),np.ones(len_samples)])
-
-
-#%%
-print(features.shape)
-print(labels.shape)
-
-# %%
-
-# Make sure to extract mfcc features from each audio file before running this code
-X = np.array(features)
-y = np.array(labels)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-clf = SVC()
-clf.fit(X_train, y_train)
-
-accuracy = clf.score(X_test, y_test)
-print("Accuracy: ", accuracy)
 
 # %%
 X, y, _, _ = loadData(asTensor=False)
-
+print(X.shape)
+X = X.reshape((X.shape[0]*X.shape[1], X.shape[2]))
+print(X.shape)
+print(y.shape)
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
 
 clf = SVC()
@@ -121,7 +81,9 @@ clf.fit(X_train, y_train)
 
 accuracy = clf.score(X_val, y_val)
 print("Accuracy: ", accuracy)
-
+s = pickle.dumps(clf)
+with open(r"models/svm.pickle", "wb") as output_file:
+    pickle.dump(clf, output_file)
 #%%
 _, _, X_test, y_test = loadData(asTensor=False)
 

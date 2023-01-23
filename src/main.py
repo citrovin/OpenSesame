@@ -3,7 +3,7 @@ from tensorflow import keras
 import numpy as np
 import pyaudio
 import wave
-
+import pickle
 import os
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -22,7 +22,6 @@ def speaker_identification(
                 ):
     # save recorded files
     path_live_data = save_wav(name,buffer)
-    
     # extract the features and create vectors
     features = extract_features(path_live_data) # return a np.array with the features
     #print(features.shape)
@@ -34,23 +33,24 @@ def speaker_identification(
     #output = model.predict(np.expand_dims(features, axis=0))
 
     # Feed-forward
-    output = model.predict(features, verbose = 0)
-    
+    output = model.predict(features)
     # Choose if it is correct speaker
     score = np.mean(output)
-    if score>THRESHOLD:
+    if score>THRESHOLD_NN:
         # print('OpenSesame')
         os.system('clear')
         with open('utils/open_lock.txt', 'r') as f:
             l = f.read()
             print(l)
-
-            # OVERFLOW WHEN INCLUDING THIS CODE
-            # time.sleep(3)
-            # os.system('clear')
-            # with open('utils/closed_lock.txt', 'r') as f:
-            #     l = f.read()
-            #     print(l)
+            f.flush()
+         # OVERFLOW WHEN INCLUDING THIS CODE
+        # time.sleep(3)
+        # os.system('clear')
+        # print("Lock the door again")
+        # with open('utils/closed_lock.txt', 'r') as f:
+        #     l = f.read()
+        #     print(l)
+        #     f.flush()
     else:
         #print(score)
         pass
@@ -76,12 +76,14 @@ if __name__== "__main__" :
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
-    THRESHOLD = 0.75
-    
+    THRESHOLD_NN = 0.75
+    THRESHOLD_SVM = 0.4    
     MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs37-v5-positives'
     
-    model = keras.models.load_model(MODEL_PATH)
+    # model = keras.models.load_model(MODEL_PATH)
     print('Model loaded')
+    with open(r"svm/models/svm.pickle", "rb") as input_file:
+        model = pickle.load(input_file)
     
     print("Opening stream..")
     mic = pyaudio.PyAudio()
@@ -98,11 +100,11 @@ if __name__== "__main__" :
     with open('utils/closed_lock.txt', 'r') as f:
         l = f.read()
         print(l)
-
+        f.flush()
     i = 0
     while(1):
         i+=1
-        data = stream.read(CHUNK)
+        data = stream.read(CHUNK, exception_on_overflow=False)
         buffer1.append(data)
         buffer2.append(data)       
         buffer3.append(data)
