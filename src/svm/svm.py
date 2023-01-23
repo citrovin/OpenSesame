@@ -6,6 +6,15 @@ import librosa
 from scipy.io.wavfile import read
 import python_speech_features as mfcc
 from sklearn import preprocessing
+
+import sys
+ 
+# setting path
+# sys.path.append('../../src')
+ 
+# from src.preprocess_data import loadData
+from ..preprocess_data import loadData
+
 #%%
 def calculate_delta(array):
    

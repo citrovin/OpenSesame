@@ -16,6 +16,10 @@ from matplotlib import pyplot as plt
 
 import os
 
+import sys
+sys.path.append('../../src')
+from utils.preprocess_data import loadData
+
 
 # %%
 # Function to extract features from audio file

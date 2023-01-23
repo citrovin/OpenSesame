@@ -7,7 +7,7 @@ import wave
 
 import time
 import os
-from preprocess_data import loadData, extract_features
+from utils.preprocess_data import loadData, extract_features
 
 # call model
 def speaker_identification(
