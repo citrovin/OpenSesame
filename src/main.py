@@ -13,8 +13,7 @@ warnings.filterwarnings(action='ignore')
 def speaker_identification(
                 model, #specify
                 name,
-                buffer,
-                sample_rate
+                buffer
                 ):
     # save recorded files
     path_live_data = save_wav(name,buffer)
@@ -55,8 +54,9 @@ if __name__== "__main__" :
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
+    THRESHOLD = 1
     
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs100-v3'
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v4'
     
     model = keras.models.load_model(MODEL_PATH)
     print('Model loaded')
@@ -70,31 +70,32 @@ if __name__== "__main__" :
     buffer1=[]
     buffer2=[]
     frame_num = int( ((SAMPLE_RATE / CHUNK) * RECORDING_SECONDS))
-    #print(frame_num)
 
     i = 0
-    #print("Let's go! Good job Filippo!")
     while(1):
         i+=1
         data = stream.read(CHUNK)
         buffer1.append(data)
         buffer2.append(data)
-        #print(f'Length Buffer: {len(buffer1[0])}')
         
         # save first recording in first file
-        if ((i+ frame_num//2)% frame_num == 0): #first slot
-            #print("Saving first")
-            output = speaker_identification(model=model, name='first', buffer=buffer1, sample_rate=SAMPLE_RATE)
-            print(np.mean(output))
-            #save_wav('first',buffer1) #CHANGE
+        if ((i+ frame_num//2)% frame_num == 0):
+            output = speaker_identification(model=model, name='first', buffer=buffer1)
             buffer1=[]
-        
-        # save first recording in first file
-        if (i% frame_num == 0): #second slot
-            #print("Saving second")
-            output = speaker_identification(model=model, name='second', buffer=buffer2, sample_rate=SAMPLE_RATE)
-            print(np.mean(output))
-            #save_wav('second',buffer2) #CHANGE to speaker identification
-            buffer2=[]
+            score = np.mean(output)
+            if score>THRESHOLD:
+                print('OpenSesame')
+            else:
+                print(score)
 
-        # feature_vector = extract_features(fileName)
+            
+        
+        # save second recording in second file
+        if (i% frame_num == 0):
+            output = speaker_identification(model=model, name='second', buffer=buffer2, sample_rate=SAMPLE_RATE)
+            buffer2=[]
+            score = np.mean(output)
+            if score>THRESHOLD:
+                print('OpenSesame')
+            else:
+                print(score)
