@@ -76,9 +76,9 @@ if __name__== "__main__" :
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
-    THRESHOLD = 0.8
+    THRESHOLD = 0.6
     
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v5-test'
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v5-negatives'
     
     model = keras.models.load_model(MODEL_PATH)
     print('Model loaded')
