@@ -38,9 +38,10 @@ def extract_features(file_name, sample_rate):
 
 SAMPLE_RATE = 48000#None#int(16000)
 OUTPUT_DIR = "./models"
-EPOCHS = 100
+EPOCHS = 2
 
 # Import data
+x_train, y_train, x_test, y_test = loadData(asTensor=False)
 
 
 # %%
@@ -63,13 +64,13 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
 
 # start a new wandb run to track this script
-wandb.init(
-    # set the wandb project where this run will be logged
-    project="OpenSesame",
-    entity="juzay_and_co",
-    config = model.get_config(),
-    name = "Feed-Forward"
-)
+# wandb.init(
+#     # set the wandb project where this run will be logged
+#     project="OpenSesame",
+#     entity="juzay_and_co",
+#     config = model.get_config(),
+#     name = "Feed-Forward"
+# )
 
 #model.summary()'''
 
@@ -90,14 +91,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_s
 
 # Train the model
 history = model.fit(
-    X_train, 
+    x_train, 
     y_train, 
-    epochs=100, 
-    validation_data=(X_test, y_test)
-    
+    epochs=EPOCHS, 
+    validation_data=(x_test, y_test)
 )
 
-#%%
+
 
 name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v3"
 # Plot accuarcy

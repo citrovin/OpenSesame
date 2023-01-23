@@ -41,83 +41,15 @@ def extract_features(file_name, sample_rate):
 # RNN
 x_train, y_train, x_test, y_test = loadData(asTensor=True)
 
-# Feed-Forward
-#x_train, y_train, x_test, y_test = loadData(asTensor=False)
-
 SAMPLE_RATE = None#int(22050)
 OUTPUT_DIR = "./models"
 EPOCHS = 50
 
 
-features1_pos = extract_features("../data/train/sample1_pos.wav", sample_rate=SAMPLE_RATE)
-features2_pos = extract_features("../data/train/sample2_pos.wav", sample_rate=SAMPLE_RATE)
-features3_pos = extract_features("../data/train/sample3_pos.wav", sample_rate=SAMPLE_RATE)
-features4_pos = extract_features("../data/train/sample4_pos.wav", sample_rate=SAMPLE_RATE)
-
-
-features1_neg = extract_features("../data/train/sample1_neg.wav", sample_rate=SAMPLE_RATE)
-features2_neg = extract_features("../data/train/sample2_neg.wav", sample_rate=SAMPLE_RATE)
-features3_neg = extract_features("../data/train/sample3_neg.wav", sample_rate=SAMPLE_RATE)
-features4_neg = extract_features("../data/train/sample4_neg.wav", sample_rate=SAMPLE_RATE)
-features5_neg = extract_features("../data/train/sample1_pos_neg.wav", sample_rate=SAMPLE_RATE)
-
-
-
-features1_pos = np.swapaxes(features1_pos, 0, 1)
-features2_pos = np.swapaxes(features2_pos, 0, 1)
-features3_pos = np.swapaxes(features3_pos, 0, 1)
-features4_pos = np.swapaxes(features4_pos, 0, 1)
-
-features1_neg = np.swapaxes(features1_neg, 0, 1)
-features2_neg = np.swapaxes(features2_neg, 0, 1)
-features3_neg = np.swapaxes(features3_neg, 0, 1)
-features4_neg = np.swapaxes(features4_neg, 0, 1)
-features5_neg = np.swapaxes(features5_neg, 0, 1)
-
-labels1_pos = np.ones(1)
-labels2_pos = np.ones(1)
-labels3_pos = np.ones(1)
-labels4_pos = np.ones(1)
-
-labels1_neg = np.zeros(1)
-labels2_neg = np.zeros(1)
-labels3_neg = np.zeros(1)
-labels4_neg = np.zeros(1)
-labels5_neg = np.zeros(1)
-
-
-
-features = np.array([
-    features1_pos,
-    features2_pos,
-    features3_pos,
-    features4_pos,
-    #features1_neg,
-    features2_neg,
-    features3_neg,
-    features4_neg,
-    #features5_neg
-    ])
-
-labels = np.array([
-    np.expand_dims(labels1_pos, axis=1),
-    np.expand_dims(labels2_pos, axis=1),
-    np.expand_dims(labels3_pos, axis=1),
-    np.expand_dims(labels4_pos, axis=1),
-    #np.expand_dims(labels1_neg axis=1),
-    np.expand_dims(labels2_neg, axis=1),
-    np.expand_dims(labels3_neg, axis=1),
-    np.expand_dims(labels4_neg, axis=1),
-    #np.expand_dims(labels5_neg axis=1),
-    ])
-
-print(features.shape)
-print(labels.shape)
-
 # %%
 # Define the model
 model = Sequential()
-model.add(InputLayer((187,40)))
+model.add(InputLayer((197,40)))
 model.add(SimpleRNN(20))
 model.add(Dense(1, activation='sigmoid'))
 
@@ -134,24 +66,16 @@ model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy']
 #     name = "Dense 2 Hidden Layers (469 => 256 => 128 => 1) | 75 Epochs | Sample rate: sample_rate=int(22050/4)"
 # )
 
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(
-    features, 
-    labels, 
-    test_size=0.2, 
-    random_state=42
-    )
-
 
 # %%
 
 # Train the model
 history = model.fit(
-    X_train, 
+    x_train, 
     y_train, 
     epochs=EPOCHS,
     batch_size=1,
-    validation_data=(X_test, y_test)
+    validation_data=(x_test, y_test)
     
 )
 

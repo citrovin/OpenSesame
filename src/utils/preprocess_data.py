@@ -64,6 +64,10 @@ def calculate_delta(array):
 
 
 def extract_features(file):
+    '''
+    @params: Sound file path
+    @return: Matrix with dimensionality ...
+    '''
     rate,audio = read(file)
     mfcc_feature = mfcc.mfcc(audio,rate, 0.025, 0.01,20,nfft = 1200, appendEnergy = True)    
     mfcc_feature = preprocessing.scale(mfcc_feature)
