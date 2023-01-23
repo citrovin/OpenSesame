@@ -92,7 +92,7 @@ if __name__== "__main__" :
         
         # save second recording in second file
         if (i% frame_num == 0):
-            output = speaker_identification(model=model, name='second', buffer=buffer2, sample_rate=SAMPLE_RATE)
+            output = speaker_identification(model=model, name='second', buffer=buffer2)
             buffer2=[]
             score = np.mean(output)
             if score>THRESHOLD:

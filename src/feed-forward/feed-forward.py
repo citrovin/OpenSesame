@@ -19,19 +19,6 @@ import sys
 sys.path.append('../../src')
 from utils.preprocess_data import loadData
 
-# %%
-# Function to extract features from audio file
-def extract_features(file_name, sample_rate):
-    # Load the audio file
-    audio, sample_rate = librosa.load(file_name, sr=sample_rate)
-
-    # Extract MFCCs
-    mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
-
-    # Normalize the MFCCs
-    mfccs = (mfccs - np.mean(mfccs)) / np.std(mfccs)
-
-    return mfccs
 
 # %%
 # Extract features from audio samples
@@ -72,34 +59,23 @@ model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy']
 #     name = "Feed-Forward"
 # )
 
-#model.summary()'''
-
 # Split the data into training and test sets
 X, y, _, _ = loadData(asTensor=False)
+X = X.reshape((X.shape[0]*X.shape[1], X.shape[2]))
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=42)
-
-# X_train, X_test, y_train, y_test = train_test_split(
-#     features, 
-#     labels, 
-#     test_size=0.2, 
-#     random_state=42
-#     )
-
 
 # %%
 
 # Train the model
 history = model.fit(
-    x_train, 
+    X_train, 
     y_train, 
     epochs=EPOCHS, 
-    validation_data=(x_test, y_test)
+    validation_data=(X_test, y_test)
 )
 
-
-
-name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v3"
+name = 'test'#f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5"
 # Plot accuarcy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
@@ -107,8 +83,8 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.show()
-#plt.savefig(f'./plots/{name}_acc.png')
+#plt.show()
+plt.savefig(f'./plots/{name}_acc.png')
 
 
 # Plot Loss
@@ -118,8 +94,8 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.show()
-#plt.savefig(f'./plots/{name}_loss.png')
+#plt.show()
+plt.savefig(f'./plots/{name}_loss.png')
 
 # callbacks=[
 #     WandbMetricsLogger(log_freq=5),
@@ -133,12 +109,18 @@ model.save(os.path.join(OUTPUT_DIR, name))
 # %%
 
 _, _, X_test, y_test = loadData(asTensor=False)
+print(X_test.shape)
+number_recordings=X_test.shape[0]
+X_test = X_test.reshape((X_test.shape[0]*X_test.shape[1], X_test.shape[2]))
+print(X_test.shape)
+print(y_test.shape)
+print(y_test)
+print(number_recordings)
 
-print(X_test[1234])
 result = model.predict(X_test)
 
-print(result.shape[0]/17)
-print(y_test.shape[0]/17)
+#print(result)
+print(result.shape)
 
 #%%
 result_samples = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
@@ -148,18 +130,23 @@ for k in range(result.shape[0]):
     if k%197==0:
         # print(i)
         # result_samples[i] = (result[i*197:(i+1)*197])
+        #result_samples[i] = np.mean(result[(i*197)+20:((i+1)*197)-20])
         result_samples[i] = np.mean(result[(i*197)+20:((i+1)*197)-20])
+
         result_samples[i] = 1.0 if result_samples[i] > 0.3 else 0.0
         # true_samples[i] = (y_test[i*197:(i+1)*197])
         true_samples[i] = np.mean(y_test[i*197:(i+1)*197])
 
         i+=1
-print(len(result_samples))
-print(len(true_samples))
+
+
+#print(len(result_samples))
+#print(len(true_samples))
 y_pred = np.array(result_samples)
 y_true = np.array(true_samples)
 print(y_pred)
 print(y_true)
 from sklearn.metrics import accuracy_score
-accuracy_score(y_pred, y_true)
+print(accuracy_score(y_pred, y_true))
+
 # %%

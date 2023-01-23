@@ -196,9 +196,9 @@ def loadData(asTensor=True):
         x_test = np.load(validation_path+'x_test_tensor.npy', allow_pickle=True)
         y_test = np.load(validation_path+'y_test_tensor.npy', allow_pickle=True)
     else:
-        x_train = np.loadtxt(training_path+'x_train.csv', delimiter=',')
+        x_train = np.load(training_path+'x_train_tensor.npy', allow_pickle=True)
         y_train = np.loadtxt(training_path+'y_train.csv', delimiter=',')
-        x_test = np.loadtxt(validation_path+'x_test.csv', delimiter=',')
+        x_test = np.load(validation_path+'x_test_tensor.npy', allow_pickle=True)
         y_test = np.loadtxt(validation_path+'y_test.csv', delimiter=',')
 
     return (x_train, y_train, x_test, y_test)
