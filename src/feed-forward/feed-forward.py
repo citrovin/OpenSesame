@@ -75,7 +75,7 @@ history = model.fit(
     validation_data=(X_test, y_test)
 )
 
-name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5-test"
+name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5-negatives"
 # Plot accuarcy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
