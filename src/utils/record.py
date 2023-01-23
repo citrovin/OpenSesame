@@ -20,7 +20,7 @@ def record_audio(filename):
         f.write(audio.get_wav_data())
 
 
-data_path = '../data/'
+data_path = '../../data/'
 
 
 

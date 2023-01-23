@@ -7,7 +7,7 @@ from sklearn import preprocessing
 
 
 ##### PATH DEFINITIONS #####
-file_path = "../data/"
+file_path = "../../data/"
 
 training_path = file_path + "train/"
 validation_path = file_path + "validation/"
