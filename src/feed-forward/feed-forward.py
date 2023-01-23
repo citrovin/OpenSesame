@@ -25,7 +25,7 @@ from utils.preprocess_data import loadData
 
 SAMPLE_RATE = 48000#None#int(16000)
 OUTPUT_DIR = "./models"
-EPOCHS = 2
+EPOCHS = 40
 
 # Import data
 x_train, y_train, x_test, y_test = loadData(asTensor=False)
@@ -75,7 +75,7 @@ history = model.fit(
     validation_data=(X_test, y_test)
 )
 
-name = 'test'#f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5"
+name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v5-test"
 # Plot accuarcy
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
@@ -109,44 +109,68 @@ model.save(os.path.join(OUTPUT_DIR, name))
 # %%
 
 _, _, X_test, y_test = loadData(asTensor=False)
-print(X_test.shape)
+
 number_recordings=X_test.shape[0]
+samples_per_rec = X_test.shape[1]
+
 X_test = X_test.reshape((X_test.shape[0]*X_test.shape[1], X_test.shape[2]))
-print(X_test.shape)
-print(y_test.shape)
-print(y_test)
-print(number_recordings)
+
+print(f'y test: {y_test}')
+print(f'y test shape: {y_test.shape}')
+
+#print(number_recordings)
 
 result = model.predict(X_test)
 
-#print(result)
-print(result.shape)
+result2 = np.array([])
+for res in result:
+    if res[0]>=0.3:
+        result2 = np.append(result2, 1.0)
+    else:
+        result2 = np.append(result2, 0.0)
 
-#%%
-result_samples = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-true_samples = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+print(f'Result shape: {result.shape}')
+print(f'Result2 shape: {len(result2)}')
+
+
+# %%
+
+
+from sklearn.metrics import classification_report
+print('Classificaiton Report over all sample vectors:')
+print(classification_report(result2, y_test))
+
+# %%
+#result_samples = np.array([np.mean(result[(i*197)+20:((i+1)*197)-20]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
+#true_samples = np.array([np.mean(y_test[i*197:(i+1)*197]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
+
+
+
+result_samples = [[]]*number_recordings
+true_samples = [[]]*number_recordings
+THRESHOLD = 0.5
+
+
 i = 0
 for k in range(result.shape[0]):
-    if k%197==0:
+    if k%samples_per_rec==0:
         # print(i)
-        # result_samples[i] = (result[i*197:(i+1)*197])
-        #result_samples[i] = np.mean(result[(i*197)+20:((i+1)*197)-20])
-        result_samples[i] = np.mean(result[(i*197)+20:((i+1)*197)-20])
-
-        result_samples[i] = 1.0 if result_samples[i] > 0.3 else 0.0
-        # true_samples[i] = (y_test[i*197:(i+1)*197])
-        true_samples[i] = np.mean(y_test[i*197:(i+1)*197])
+        result_samples[i] = np.mean(result[i*samples_per_rec:(i+1)*samples_per_rec])
+        true_samples[i] = np.mean(y_test[i*samples_per_rec:(i+1)*samples_per_rec])
 
         i+=1
 
+for i, res in enumerate(result_samples):
+    if res>THRESHOLD:
+        result_samples[i]=1.0
+    else:
+        result_samples[i]=0.0
 
-#print(len(result_samples))
-#print(len(true_samples))
 y_pred = np.array(result_samples)
 y_true = np.array(true_samples)
-print(y_pred)
-print(y_true)
-from sklearn.metrics import accuracy_score
-print(accuracy_score(y_pred, y_true))
+
+print('Classificaiton Report over all recordings:')
+print(classification_report(y_pred, y_true))
+
 
 # %%
