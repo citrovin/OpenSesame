@@ -52,8 +52,8 @@ def speaker_identification(
             #     l = f.read()
             #     print(l)
     else:
-        # print(score)
-        pass
+        print(score)
+        # pass
     
     return output
 
@@ -76,9 +76,9 @@ if __name__== "__main__" :
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
-    THRESHOLD = 0.3
+    THRESHOLD = 0.8
     
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs100-v3'
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v5-test'
     
     model = keras.models.load_model(MODEL_PATH)
     print('Model loaded')
