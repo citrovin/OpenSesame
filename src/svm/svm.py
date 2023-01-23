@@ -8,12 +8,10 @@ import python_speech_features as mfcc
 from sklearn import preprocessing
 
 import sys
- 
-# setting path
-# sys.path.append('../../src')
- 
-# from src.preprocess_data import loadData
-from ..preprocess_data import loadData
+from importlib import reload # python 2.7 does not require this
+
+sys.path.append('../../src')
+from utils.preprocess_data import loadData
 
 #%%
 def calculate_delta(array):
@@ -112,6 +110,28 @@ clf.fit(X_train, y_train)
 
 accuracy = clf.score(X_test, y_test)
 print("Accuracy: ", accuracy)
+
+# %%
+X, y, _, _ = loadData(asTensor=False)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+clf = SVC()
+clf.fit(X_train, y_train)
+
+accuracy = clf.score(X_test, y_test)
+print("Accuracy: ", accuracy)
+
+#%%
+_, _, X_test, y_test = loadData(asTensor=False)
+
+result = clf.predict(X_test)
+
+from sklearn.metrics import accuracy_score
+accuracy_score(result, y_test)
+# score = clf.score(result, y_test)
+
+
 # %%
 
 sr,audio = read(file_path+'pos'+".wav")
