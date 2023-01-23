@@ -33,74 +33,11 @@ def extract_features(file_name, sample_rate):
 # %%
 # Extract features from audio samples
 
-SAMPLE_RATE = None#int(22050)
+SAMPLE_RATE = None#int(16000)
 OUTPUT_DIR = "./models"
 EPOCHS = 100
 
-
-features1_pos = extract_features("../data/train/sample1_pos.wav", sample_rate=SAMPLE_RATE)
-features2_pos = extract_features("../data/train/sample2_pos.wav", sample_rate=SAMPLE_RATE)
-features3_pos = extract_features("../data/train/sample3_pos.wav", sample_rate=SAMPLE_RATE)
-features4_pos = extract_features("../data/train/sample4_pos.wav", sample_rate=SAMPLE_RATE)
-
-
-features1_neg = extract_features("../data/train/sample1_neg.wav", sample_rate=SAMPLE_RATE)
-features2_neg = extract_features("../data/train/sample2_neg.wav", sample_rate=SAMPLE_RATE)
-features3_neg = extract_features("../data/train/sample3_neg.wav", sample_rate=SAMPLE_RATE)
-features4_neg = extract_features("../data/train/sample4_neg.wav", sample_rate=SAMPLE_RATE)
-features5_neg = extract_features("../data/train/sample1_pos_neg.wav", sample_rate=SAMPLE_RATE)
-
-
-
-features1_pos = np.swapaxes(features1_pos, 0, 1)
-features2_pos = np.swapaxes(features2_pos, 0, 1)
-features3_pos = np.swapaxes(features3_pos, 0, 1)
-features4_pos = np.swapaxes(features4_pos, 0, 1)
-
-features1_neg = np.swapaxes(features1_neg, 0, 1)
-features2_neg = np.swapaxes(features2_neg, 0, 1)
-features3_neg = np.swapaxes(features3_neg, 0, 1)
-features4_neg = np.swapaxes(features4_neg, 0, 1)
-features5_neg = np.swapaxes(features5_neg, 0, 1)
-
-labels1_pos = np.ones(features1_pos.shape[0])
-labels2_pos = np.ones(features2_pos.shape[0])
-labels3_pos = np.ones(features3_pos.shape[0])
-labels4_pos = np.ones(features4_pos.shape[0])
-
-labels1_neg = np.zeros(features1_neg.shape[0])
-labels2_neg = np.zeros(features2_neg.shape[0])
-labels3_neg = np.zeros(features3_neg.shape[0])
-labels4_neg = np.zeros(features4_neg.shape[0])
-labels5_neg = np.zeros(features5_neg.shape[0])
-
-
-
-# features = [features1, features2, features3, features4]
-# labels = [labels1, labels2, labels3, labels4]
-
-features = np.vstack([
-    features1_pos,
-    features2_pos,
-    features3_pos,
-    features4_pos,
-    features1_neg,
-    features2_neg,
-    features3_neg,
-    features4_neg,
-    features5_neg
-    ])
-labels = np.hstack([
-    labels1_pos,
-    labels2_pos,
-    labels3_pos,
-    labels4_pos,
-    labels1_neg,
-    labels2_neg,
-    labels3_neg,
-    labels4_neg,
-    labels5_neg
-    ])
+# Import data
 
 
 # %%
@@ -123,13 +60,13 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
 
 # start a new wandb run to track this script
-# wandb.init(
-#     # set the wandb project where this run will be logged
-#     project="OpenSesame",
-#     entity="juzay_and_co",
-#     config = model.get_config(),
-#     name = "Dense 2 Hidden Layers (469 => 256 => 128 => 1) | 75 Epochs | Sample rate: sample_rate=int(22050/4)"
-# )
+wandb.init(
+    # set the wandb project where this run will be logged
+    project="OpenSesame",
+    entity="juzay_and_co",
+    config = model.get_config(),
+    name = "Feed-Forward"
+)
 
 #model.summary()'''
 
