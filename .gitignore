@@ -1,4 +1,4 @@
 wandb
 __pycache__
-data/live
+./data/live
 .log
