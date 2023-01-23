@@ -25,7 +25,7 @@ from utils.preprocess_data import loadData
 
 SAMPLE_RATE = 48000#None#int(16000)
 OUTPUT_DIR = "./models"
-EPOCHS = 40
+EPOCHS = 37
 
 # Import data
 x_train, y_train, x_test, y_test = loadData(asTensor=False)
