@@ -175,8 +175,6 @@ Every directory named after a model, i.e. ```./src/feed-forward``` contain the t
 
 The ```./src/utils``` directory contains all the files needed to record and preprocess our training and testing data.
 
-The ```./Archives``` all of our work product is saved, also including disregarded approaches.
-
 Lastly, the ```./requirements.txt``` files specify which libraries we used, if you want to use this repository.
 
 
