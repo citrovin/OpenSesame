@@ -119,9 +119,17 @@ print(f'Result2 shape: {len(result2)}')
 # %%
 
 
-from sklearn.metrics import classification_report
-print('Classification Report over all sample vectors:')
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+print('Classificaiton Report over all sample vectors:')
 print(classification_report(result2, y_test))
+
+labels_cf_matrix = ['True Neg','False Pos','False Neg','True Pos']
+labels_cf_matrix = np.asarray(labels_cf_matrix).reshape(2,2)
+
+cf_matrix = confusion_matrix(y_test, result2)
+heatmap_sns = sns.heatmap(cf_matrix, annot=labels_cf_matrix, cmap='Blues', fmt='')
+heatmap_sns.get_figure().savefig(f'./plots/heatmap_samples_svmV2.png')
 
 # %%
 #result_samples = np.array([np.mean(result[(i*197)+20:((i+1)*197)-20]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
@@ -154,3 +162,8 @@ y_true = np.array(true_samples)
 
 print('Classification Report over all recordings:')
 print(classification_report(y_pred, y_true))
+
+
+cf_rec_matrix = confusion_matrix(y_true, y_pred)
+heatmap_rec_sns = sns.heatmap(cf_matrix, annot=labels_cf_matrix, cmap='Blues', fmt='')
+heatmap_rec_sns.get_figure().savefig(f'./plots/heatmap_svm_recordings_svmV2.png')

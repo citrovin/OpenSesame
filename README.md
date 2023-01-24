@@ -33,13 +33,11 @@ Figure 3: Accuracy and Loss of the Training process
 
 Since we unpack every recording into 197 individual vectors, we evaluate the trained model twice. Firstly, how well did the model generalise on all samples and how well did the model generalise on the recodings?
 
-Confusion Matrix for individual samples:
-![](./images/heatmap_samples_dense-nn-sr48000-epochs40-v8.png "Figure 4: Confusion Matrix of Prediction on all samples")
-Figure 4: Confusion Matrix of Prediction on all samples
 
-Confusion Matrix for on recordings:
-![](./images/heatmap_recordings_dense-nn-sr48000-epochs40-v8.png "Figure 5: Confusion Matrix of Prediction on all recordings")
-Figure 5: Confusion Matrix of Prediction on all recordings
+Figure 4: Confusion Matrix of Prediction on all samples | Figure 5: Confusion Matrix of Prediction on all recordings
+:-------------------------:|:-------------------------:
+![](./images/heatmap_samples_dense-nn-sr48000-epochs40-v8.png "Figure 4: Confusion Matrix of NN Prediction on all samples")  |  ![](./images/heatmap_recordings_dense-nn-sr48000-epochs40-v8.png "Figure 5: Confusion Matrix of NN Prediction on all recordings")
+
 
 
 
@@ -79,7 +77,39 @@ weighted avg       1.00      1.00      1.00        34
 #### **Support Vector Machine**
 The SVM model implements the default ```SVC()``` model provided by the sklearn library, which uses a radial basis function as the kernel.
 
-# TODO
+
+Figure 5: Confusion Matrix of Prediction on all samples | Figure 6: Confusion Matrix of Prediction on all recordings
+:-------------------------:|:-------------------------:
+![](./images/heatmap_samples_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all samples")  |  ![](./images/heatmap_svm_recordings_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all recordings")
+
+
+
+
+Performance metrics on all sample:
+```
+Classificaiton Report over all sample vectors:
+              precision    recall  f1-score   support
+
+         0.0       0.68      0.75      0.72      3021
+         1.0       0.78      0.71      0.74      3677
+
+    accuracy                           0.73      6698
+   macro avg       0.73      0.73      0.73      6698
+weighted avg       0.73      0.73      0.73      6698
+```
+
+Performance metrics on recordings:
+```
+Classification Report over all recordings:
+              precision    recall  f1-score   support
+
+         0.0       0.76      1.00      0.87        13
+         1.0       1.00      0.81      0.89        21
+
+    accuracy                           0.88        34
+   macro avg       0.88      0.90      0.88        34
+weighted avg       0.91      0.88      0.88        34
+```
 
 #### **Training Data**
 For training we collected 136 recordings, which is split into 50% positive and 50% negative samples. Each recording is split into 197 vectors, which are fed to the model during training. For testing our model, we use the exact same strateg as for training.
