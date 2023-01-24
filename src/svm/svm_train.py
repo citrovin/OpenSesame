@@ -82,7 +82,7 @@ clf.fit(X_train, y_train)
 accuracy = clf.score(X_val, y_val)
 print("Accuracy: ", accuracy)
 s = pickle.dumps(clf)
-with open(r"models/svm.pickle", "wb") as output_file:
+with open(r"models/svmV2.pickle", "wb") as output_file:
     pickle.dump(clf, output_file)
 
 

@@ -47,14 +47,14 @@ def speaker_identification(
             print(l)
             f.flush()
          # OVERFLOW WHEN INCLUDING THIS CODE
-        time.sleep(2)
-        os.system('clear')
-        print("Lock the door again")
-        with open('utils/closed_lock.txt', 'r') as f:
-            l = f.read()
-            print(l)
-            f.flush()
-            time.sleep(10)
+        # time.sleep(2)
+        # os.system('clear')
+        # print("Lock the door again")
+        # with open('utils/closed_lock.txt', 'r') as f:
+        #     l = f.read()
+        #     print(l)
+        #     f.flush()
+            # time.sleep(10)
     else:
         #print(score)
         pass
@@ -84,11 +84,11 @@ if __name__== "__main__" :
     SAMPLE_RATE = 48000
     THRESHOLD_NN = 0.5
     THRESHOLD_SVM = 0.6
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs35-v6-noise'
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v7'
     
     model_nn = keras.models.load_model(MODEL_PATH)
     
-    with open(r"svm/models/svm.pickle", "rb") as input_file:
+    with open(r"svm/models/svmV2.pickle", "rb") as input_file:
         model_svm = pickle.load(input_file)
     print('Model loaded')
 
