@@ -23,15 +23,15 @@ The Neural Network used for OpenSesame is a Feed-Forward neural network, that im
 
 
 ## Training Data
+For training we collected 136 recordings, which is split into 50% positive and 50% negative samples. Each recording is split into 197 vectors, which are fed to the model during training. For testing our model, we use the exact same strateg as for training.
 
-
-
-
-|   | Training | Testing |
+|   | Recordings for Training | Recordings for Testing |
 | ------------- | ------------- | ------------- |
 | Positive  | 68  | 13 |
 | Negative  | 68  | 13 |
 | Total  | 136  | 26 |
+
+
 
 ## Project Structure
 - Main
@@ -39,5 +39,11 @@ The Neural Network used for OpenSesame is a Feed-Forward neural network, that im
 - Training the models
 
 
+### Team
+
+The team behind this project consists of three graudate engineering students, currently enrolled in the EIT Autonomous Systems program at Polytech Nice-Sophia.
 
 
+1) Filippo Zeggio
+2) Philipp Ahrendt
+3) Dalim Wahby
