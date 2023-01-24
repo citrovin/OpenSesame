@@ -129,7 +129,6 @@ For training we collected 156 recordings, which is split into 50% positive and 5
 ### **Project Structure**
 
 ```
-├── Archive
 ├── README.md
 ├── data
 │   ├── live
@@ -138,14 +137,9 @@ For training we collected 156 recordings, which is split into 50% positive and 5
 ├── images
 ├── requirements.txt
 └── src
-    ├── main.py
-    ├── utils
-    │   ├── __init__.py
-    │   ├── closed_lock.txt
-    │   ├── im2a.py
-    │   ├── open_lock.txt
-    │   ├── preprocess_data.py
-    │   └── record.py
+    ├── ascii_art
+    │   ├── closed_lock.txt
+    │   └── open_lock.txt
     ├── feed-forward
     │   ├── feed-forward_train.py
     │   ├── models
@@ -156,15 +150,23 @@ For training we collected 156 recordings, which is split into 50% positive and 5
     │   ├── testing_set
     │   ├── train_gmm.py
     │   ├── trained_models
+    │   └── training_set
+    ├── main.py
     ├── rnn
     │   ├── models
     │   ├── plots
     │   ├── rnn-validate.py
     │   └── rnn_train.py
-    └── svm
-        ├── models
-        ├── old
-        └── svm_train.py
+    ├── svm
+    │   ├── models
+    │   ├── old
+    │   ├── plots
+    │   └── svm_train.py
+    └── utils
+        ├── __init__.py
+        ├── im2a.py
+        ├── preprocess_data.py
+        └── record.py
 ```
 
 All code is stored in the ```./src``` directory. It contains the ```main.py``` file, that contains the actual program, implementing the logic and the used models. Additionally, there are further models (i.e. ```./src/rnn``` ), that were used for training, however were not seen as feasible due to computation costs or other factors that have to be taken into account.
