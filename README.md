@@ -4,7 +4,7 @@ OpenSesame is a software for speaker identification and speach recognition syste
 ## How does OpenSesame work?
 OpenSesame combines two machine learning approaches: 1) NN and 2) SVM, as shown in the following figure.
 
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
+
 
 
 
