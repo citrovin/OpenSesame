@@ -1,7 +1,7 @@
 # **OpenSesame: The speaker recognition system, that keeps the integrity of your data!**
 
 
-OpenSesame is a software for speaker identification and speach recognition system. It leverages machine lerning, namely a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
+OpenSesame is a software for speaker identification and speach recognition system. It leverages machine lerning, namely a Neural Network and a Support Vector Machine to identify if the correct speaker says the correct keyword, such as "open sesame". It records and identifies the speaker in real time. After detecting the speaker and the key word, the program is to unlock the protected data.
 
 ---
 
@@ -11,13 +11,13 @@ OpenSesame consists of 4 parts: 1) live recording, 2) neural network, 3) support
 ![](./images/logic.png "Figure 1: Logic of OpenSesame")
 Figure 1: Logic of OpenSesame
 
-1) Live Recording: OpenSesame records live data to identify if the keyword has been said by the correct user in real time. The recordings are saves in three wave files, that overlap to catch the case if the keyword is split onto two different recordings. The prediction is then run over the three recordings.
+1) Live Recording: The live recordings are saved in three waveform audio files, that overlap 1.34 seconds (2/3 of the recording time, here 2 seconds) with the preceeding recording, to catch the case if the keyword is split onto two different recordings. The prediction is then run over the three recordings.
 
-2) Neural Network (NN): The neural network computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.6, the system recognises that the correct speaker said the correct keyword.
+2) Neural Network (NN): The neural network computes a prediction value of between 0 and 1. If it surpasses a certain threshold (here ```THRESHOLD_NN=0.6```), the system recognises that the correct speaker said the correct keyword.
 
-3) Support Vector Machine (SVM): The SVM computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.75, the system recognises that the correct speaker said the correct keyword.
+3) Support Vector Machine (SVM): The SVM computes a prediction value of between 0 and 1. If it surpasses a certain threshold of (here ```THRESHOLD_SVM=0.75```), the system recognises that the correct speaker said the correct keyword.
 
-4) Decision: If both thresholds of the NN and the SVM are supassed, then and only then the system unlocks. Using two different models, gives us a kind of fail-safe, for the case that the NN or the SVM somehow predicts a high value, eventhoug it should not have. The unlock screen, as shown in Fig. 2.
+4) Decision: If both thresholds of the NN **and** the SVM are supassed, then and only then the system unlocks. Using two different models, gives us a kind of fail-safe, for the case that the NN or the SVM somehow predicts a high value, eventhoug it should not have. The unlock screen, as shown in Fig. 2.
 
 ![](./images/OpenSesame.gif "Figure 2: Unlock Screen")
 Figure 2: Unlock Screen
@@ -27,7 +27,7 @@ Figure 2: Unlock Screen
 ### **Machine Learning Models**
 
 #### **Neural Network Archtecture**
-The Neural Network used for OpenSesame is a Feed-Forward neural network, that implents 6 Dense layers. The first layer expands the feature vector from 40 to 256 dimensions. Every following layer decreases the dimensionality by a power of 2, namely 128, 64, 32, 16, 1. All layers use a Relu activation function, except the last layer. It uses a Sigmoid activation, which gives us a value that represents a probability (bewteen 0 and 1) if the correct speaker said the correct keyword. The model is trained on 40 epochs. The training results can be seen in the following parts:
+The Neural Network used for OpenSesame is a Feed-Forward neural network, that implents 6 Dense layers. The first layer expands the feature vector from 40 to 256 dimensions. Every following layer decreases the dimensionality by a power of 2, namely 128, 64, 32, 16, 1. All layers use a Relu activation function, except the last layer. It uses a Sigmoid activation, which gives us a value that represents a probability (bewteen 0 and 1) if the correct speaker says the correct keyword. The model is trained on 40 epochs. In Fig. 3, we can see that the converges 98% accuracy on the validation dataset.
 
 ![](./src/feed-forward/plots/plots_dense-nn-sr48000-epochs40-v8.png "Figure 3: Accuracy and Loss of the Training process")
 Figure 3: Accuracy and Loss of the Training process
@@ -74,7 +74,7 @@ weighted avg       0.95      0.94      0.94        34
 ```
 
 
-As we can see our model performs well on predicting, if an entire recording contains the correct keyword, by the correct user. Thereofre, it is not as important to look at the results of the classification of every sample.
+As we can see our model performs well on predicting, if an entire recording contains the correct keyword, by the correct user. Therefore, it is not as important to look at the results of the classification of every sample. Here we can see that the model generalises well on before unseen data and achieves an accuracy of 94%. 
 
 
 
@@ -173,7 +173,7 @@ For training we collected 156 recordings, which is split into 50% positive and 5
         └── record.py
 ```
 
-All code is stored in the ```./src``` directory. It contains the ```main.py``` file, that contains the actual program, implementing the logic and the used models. Additionally, there are further models (i.e. ```./src/rnn``` ), that were used for training, however were not seen as feasible due to computation costs or other factors that have to be taken into account.
+All code is stored in the ```./src``` directory. It contains the ```main.py``` file, that contains the actual program, implementing the logic and the used models. Additionally, there are further models (i.e. ```./src/rnn``` ), that were used for training, however were not seen as feasible due to computation costs or other factors that had to be taken into account.
 
 Every directory named after a model, i.e. ```./src/feed-forward``` contain the training file of the models and the trained models, that are used in ```main.py```.
 
