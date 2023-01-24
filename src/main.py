@@ -42,7 +42,7 @@ def speaker_identification(
     # if score>THRESHOLD_TOTAL:
         # print('OpenSesame')
         os.system('clear')
-        with open('utils/open_lock.txt', 'r') as f:
+        with open('ascii_art/open_lock.txt', 'r') as f:
             l = f.read()
             print(l)
             f.flush()
@@ -50,7 +50,7 @@ def speaker_identification(
         # time.sleep(2)
         # os.system('clear')
         # print("Lock the door again")
-        # with open('utils/closed_lock.txt', 'r') as f:
+        # with open('ascii_art/closed_lock.txt', 'r') as f:
         #     l = f.read()
         #     print(l)
         #     f.flush()
@@ -104,7 +104,7 @@ if __name__== "__main__" :
     frame_num = int( ((SAMPLE_RATE / CHUNK) * RECORDING_SECONDS))
 
     os.system('clear')
-    with open('utils/closed_lock.txt', 'r') as f:
+    with open('ascii_art/closed_lock.txt', 'r') as f:
         l = f.read()
         print(l)
         f.flush()
