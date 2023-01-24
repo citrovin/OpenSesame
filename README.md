@@ -29,9 +29,9 @@ The Neural Network used for OpenSesame is a Feed-Forward neural network, that im
 
 |   | Training | Testing |
 | ------------- | ------------- | ------------- |
-| Positive  | 45  | 8 |
+| Positive  | 68  | 13 |
 | Negative  | 68  | 13 |
-| Total  | 113  | 21 |
+| Total  | 136  | 26 |
 
 ## Project Structure
 - Main
