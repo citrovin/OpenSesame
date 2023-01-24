@@ -13,6 +13,7 @@ from utils.preprocess_data import loadData, extract_features
 
 import warnings
 warnings.filterwarnings(action='ignore')
+counter = 0
 
 # call model
 def speaker_identification(
@@ -37,8 +38,19 @@ def speaker_identification(
     THRESHOLD_TOTAL = np.mean([THRESHOLD_NN, THRESHOLD_SVM])
 
     # print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
-
-    if score_svm>THRESHOLD_SVM and score_nn>THRESHOLD_NN:
+    global counter
+    if counter == 1:
+        print("Lock the door again")
+        with open('ascii_art/closed_lock.txt', 'r') as f:
+            l = f.read()
+            print(l)
+            f.flush()
+            
+    if counter > 0:
+        counter-=1
+        
+    if (score_svm>THRESHOLD_SVM and score_nn>THRESHOLD_NN and counter==0):
+        counter=3
     # if score>THRESHOLD_TOTAL:
         # print('OpenSesame')
         os.system('clear')
@@ -58,7 +70,7 @@ def speaker_identification(
     else:
         #print(score)
         pass
-    
+
     
 
     return 0 #output
