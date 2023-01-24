@@ -10,7 +10,7 @@ from sklearn import preprocessing
 file_path = "../../data/"
 
 training_path = file_path + "train/"
-validation_path = file_path + "validation/"
+test_path = file_path + "test/"
 
 extension = '.wav'
 
@@ -23,8 +23,8 @@ neg = 'negative/'
 ##### VAR DEFINITIONS #####
 train_pos = training_path+pos
 train_neg = training_path+neg
-val_pos = validation_path+pos
-val_neg = validation_path+neg
+val_pos = test_path+pos
+val_neg = test_path+neg
 
 dirs = [train_pos, train_neg, val_pos, val_neg]
 
@@ -93,7 +93,7 @@ def getTrainingData():
     labels = []
     return (features, labels)
 
-def getValidationData():
+def gettestData():
     pass
 
 def createFeatureArray(files, label):
@@ -157,13 +157,13 @@ class Files:
     def openFiles(self):
         self.x_train = open(training_path+'x_train.csv','w')
         self.y_train = open(training_path+'y_train.csv','w')
-        self.x_test = open(validation_path+'x_test.csv', 'w')
-        self.y_test = open(validation_path+'y_test.csv', 'w')
+        self.x_test = open(test_path+'x_test.csv', 'w')
+        self.y_test = open(test_path+'y_test.csv', 'w')
 
         self.x_train_tensor = open(training_path+'x_train_tensor.npy','wb')
         self.y_train_tensor = open(training_path+'y_train_tensor.npy','wb')
-        self.x_test_tensor = open(validation_path+'x_test_tensor.csv', 'wb')
-        self.y_test_tensor = open(validation_path+'y_test_tensor.csv', 'wb')
+        self.x_test_tensor = open(test_path+'x_test_tensor.csv', 'wb')
+        self.y_test_tensor = open(test_path+'y_test_tensor.csv', 'wb')
 
     def closeFiles(self):
         self.x_train.close()
@@ -193,13 +193,13 @@ def loadData(asTensor=True):
     if asTensor:
         x_train = np.load(training_path+'x_train_tensor.npy', allow_pickle=True)
         y_train = np.load(training_path+'y_train_tensor.npy', allow_pickle=True)
-        x_test = np.load(validation_path+'x_test_tensor.npy', allow_pickle=True)
-        y_test = np.load(validation_path+'y_test_tensor.npy', allow_pickle=True)
+        x_test = np.load(test_path+'x_test_tensor.npy', allow_pickle=True)
+        y_test = np.load(test_path+'y_test_tensor.npy', allow_pickle=True)
     else:
         x_train = np.load(training_path+'x_train_tensor.npy', allow_pickle=True)
         y_train = np.loadtxt(training_path+'y_train.csv', delimiter=',')
-        x_test = np.load(validation_path+'x_test_tensor.npy', allow_pickle=True)
-        y_test = np.loadtxt(validation_path+'y_test.csv', delimiter=',')
+        x_test = np.load(test_path+'x_test_tensor.npy', allow_pickle=True)
+        y_test = np.loadtxt(test_path+'y_test.csv', delimiter=',')
 
     return (x_train, y_train, x_test, y_test)
 
@@ -264,8 +264,8 @@ if __name__== "__main__" :
 
     np.savetxt(f.x_test, arr.x_test, delimiter=',')
     np.savetxt(f.y_test, arr.y_test, delimiter=',')
-    np.save(validation_path+'x_test_tensor.npy', arr.x_test_tensor)
-    np.save(validation_path+'y_test_tensor.npy', arr.y_test_tensor)
+    np.save(test_path+'x_test_tensor.npy', arr.x_test_tensor)
+    np.save(test_path+'y_test_tensor.npy', arr.y_test_tensor)
     
     f.closeFiles()
 
