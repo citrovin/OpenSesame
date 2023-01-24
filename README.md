@@ -1,8 +1,9 @@
-# **OpenSesame**
-## **The speaker recognition system, that keeps the integrity of your data!**
+# **OpenSesame: The speaker recognition system, that keeps the integrity of your data!**
 
 
 OpenSesame is a software for speaker identification and speach recognition system. It leverages machine lerning, namely a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
+
+---
 
 ### **How does OpenSesame work?**
 OpenSesame consists of 4 parts: 1) live recording, 2) neural network, 3) support vector machine, and 4) the decision block, as shown in Fig. 1. In the following, we will shortly introduce the main components of the program.
@@ -20,6 +21,8 @@ Figure 1: Logic of OpenSesame
 
 ![](./images/OpenSesame.gif "Figure 2: Unlock Screen")
 Figure 2: Unlock Screen
+
+---
 
 ### **Machine Learning Models**
 
@@ -125,6 +128,7 @@ For training we collected 156 recordings, which is split into 50% positive and 5
 | Negative  | 78  | 17 |
 | Total  | 156  | 34 |
 
+---
 
 ### **Project Structure**
 
@@ -177,7 +181,7 @@ The ```./src/utils``` directory contains all the files needed to record and prep
 
 Lastly, the ```./requirements.txt``` files specify which libraries we used, if you want to use this repository.
 
-
+---
 
 ### **Team**
 
