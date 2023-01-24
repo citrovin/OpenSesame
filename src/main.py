@@ -26,7 +26,7 @@ def speaker_identification(
     features = extract_features(path_live_data)
 
     # Feed-forward
-    output_nn = model[0].predict(features)
+    output_nn = model[0].predict(features, verbose=0)
     output_svm = model[1].predict(features)
 
     score_nn = np.mean(output_nn)
@@ -38,7 +38,8 @@ def speaker_identification(
 
     print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
 
-    if score>THRESHOLD_TOTAL:
+    if score_svm>THRESHOLD_SVM and score_nn>THRESHOLD_NN:
+    # if score>THRESHOLD_TOTAL:
         # print('OpenSesame')
         os.system('clear')
         with open('utils/open_lock.txt', 'r') as f:
@@ -46,13 +47,14 @@ def speaker_identification(
             print(l)
             f.flush()
          # OVERFLOW WHEN INCLUDING THIS CODE
-        # time.sleep(3)
-        # os.system('clear')
-        # print("Lock the door again")
-        # with open('utils/closed_lock.txt', 'r') as f:
-        #     l = f.read()
-        #     print(l)
-        #     f.flush()
+        time.sleep(2)
+        os.system('clear')
+        print("Lock the door again")
+        with open('utils/closed_lock.txt', 'r') as f:
+            l = f.read()
+            print(l)
+            f.flush()
+            time.sleep(10)
     else:
         #print(score)
         pass
@@ -80,8 +82,8 @@ if __name__== "__main__" :
     CHUNK = 2048 # in buffer always 2 times the number of chunk is saved
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
-    THRESHOLD_NN = 0.75
-    THRESHOLD_SVM = 0.4    
+    THRESHOLD_NN = 0.5
+    THRESHOLD_SVM = 0.6
     MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs35-v6-noise'
     
     model_nn = keras.models.load_model(MODEL_PATH)
