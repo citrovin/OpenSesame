@@ -1,9 +1,10 @@
-# Open Sesame
+# OpenSesame
+OpenSesame is a software for speaker identification, that leverages Artificial Intelligence. The main goal of this technology is to secure anything that you want secured, i.e. data, your house, your apartment etc. 
+
 
 
 ## Technologies
-- Markov Chains
-- NN
+
 
 
 ## Steps
