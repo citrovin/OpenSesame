@@ -36,7 +36,7 @@ def speaker_identification(
 
     THRESHOLD_TOTAL = np.mean([THRESHOLD_NN, THRESHOLD_SVM])
 
-    print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
+    # print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
 
     if score_svm>THRESHOLD_SVM and score_nn>THRESHOLD_NN:
     # if score>THRESHOLD_TOTAL:
