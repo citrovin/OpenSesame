@@ -1,16 +1,17 @@
 # OpenSesame
-OpenSesame is a software for speaker identification, that leverages Artificial Intelligence. The main goal of this technology is to secure anything that you want secured, i.e. data, your house, your apartment etc. 
+OpenSesame is a software for speaker identification and speach recognition system. It leverages a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
+
+## How does OpenSesame work?
+OpenSesame combines two machine learning approaches: 1) NN and 2) SVM, as shown in the following figure.
+
+![Alt text](relative/path/to/img.jpg?raw=true "Title")
 
 
 
-## Technologies
-
-
-
-## Steps
-- Get data
-- What does the data look like?
-- Simple Feed Forward Neural Network
+## Project Structure
+- Main
+- Data preprocessing for training
+- Training the models
 
 
 ## Training Data
