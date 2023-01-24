@@ -29,15 +29,15 @@ while True:
     time = datetime.now().strftime("%d_%m_%H_%M_%S")
     file_path = data_path
     
-    choice=int(input("\n 1.Record audio for positive training sample \n 2.Record audio for negative training sample\n 3.Record audio for positive validation sample \n 4.Record audio for negative validation sample\n"))
+    choice=int(input("\n 1.Record audio for positive training sample \n 2.Record audio for negative training sample\n 3.Record audio for positive testx^x1 sample \n 4.Record audio for negative testx^x1 sample\n"))
     if(choice==1):
         file_path += 'train/positive/pos_'
     elif(choice==2):
         file_path += 'train/negative/neg_'
     elif(choice==3):
-        file_path += 'validation/positive/pos_'
+        file_path += 'test/positive/pos_'
     elif(choice==4):
-        file_path += 'validation/negative/neg_'
+        file_path += 'test/negative/neg_'
     if(choice>4):
         exit()
 
