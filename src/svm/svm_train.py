@@ -7,6 +7,8 @@ from scipy.io.wavfile import read
 import python_speech_features as mfcc
 from sklearn import preprocessing
 
+import matplotlib.pyplot as plt
+
 import sys
 from importlib import reload # python 2.7 does not require this
 
@@ -19,8 +21,8 @@ import pickle
 def calculate_delta(array):
    
     rows,cols = array.shape
-    print(rows)
-    print(cols)
+    #print(rows)
+    #print(cols)
     deltas = np.zeros((rows,20))
     N = 2
     for i in range(rows):
@@ -70,10 +72,10 @@ def extract_mfcc(file_path):
 
 # %%
 X, y, _, _ = loadData(asTensor=False)
-print(X.shape)
+#print(X.shape)
 X = X.reshape((X.shape[0]*X.shape[1], X.shape[2]))
-print(X.shape)
-print(y.shape)
+#print(X.shape)
+#print(y.shape)
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
 
 clf = SVC()
@@ -97,13 +99,13 @@ samples_per_rec = X_test.shape[1]
 
 X_test = X_test.reshape((X_test.shape[0]*X_test.shape[1], X_test.shape[2]))
 
-print(f'y test: {y_test}')
-print(f'y test shape: {y_test.shape}')
+#print(f'y test: {y_test}')
+#print(f'y test shape: {y_test.shape}')
 
 #print(number_recordings)
 
 result = clf.predict(X_test)
-print(result.shape)
+#print(result.shape)
 
 result2 = np.array([])
 for res in result:
@@ -112,8 +114,8 @@ for res in result:
     else:
         result2 = np.append(result2, 0.0)
 
-print(f'Result shape: {result.shape}')
-print(f'Result2 shape: {len(result2)}')
+#print(f'Result shape: {result.shape}')
+#print(f'Result2 shape: {len(result2)}')
 
 
 # %%
@@ -130,12 +132,8 @@ labels_cf_matrix = np.asarray(labels_cf_matrix).reshape(2,2)
 cf_matrix = confusion_matrix(y_test, result2)
 heatmap_sns = sns.heatmap(cf_matrix, annot=labels_cf_matrix, cmap='Blues', fmt='')
 heatmap_sns.get_figure().savefig(f'./plots/heatmap_samples_svmV2.png')
-
+plt.close()
 # %%
-#result_samples = np.array([np.mean(result[(i*197)+20:((i+1)*197)-20]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
-#true_samples = np.array([np.mean(y_test[i*197:(i+1)*197]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
-
-
 
 result_samples = [[]]*number_recordings
 true_samples = [[]]*number_recordings

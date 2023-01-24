@@ -2,7 +2,7 @@
 ## **The speaker recognition system, that keeps the integrity of your data!**
 
 
-OpenSesame is a software for speaker identification and speach recognition system. It leverages a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
+OpenSesame is a software for speaker identification and speach recognition system. It leverages machine lerning, namely a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
 
 ### **How does OpenSesame work?**
 OpenSesame consists of 4 parts: 1) live recording, 2) neural network, 3) support vector machine, and 4) the decision block, as shown in Fig. 1. In the following, we will shortly introduce the main components of the program.
@@ -24,10 +24,9 @@ Figure 2: Unlock Screen
 ### **Machine Learning Models**
 
 #### **Neural Network Archtecture**
-The Neural Network used for OpenSesame is a Feed-Forward neural network, that implents 6 Dense layers. The first layer expands the feature vector from 40 to 256 dimensions. Every following layer decreases the dimensionality by a power of 2, namely 128, 64, 32, 16, 1. All layers use a Relu activation function, except the last layer. It uses a Sigmoid activation, which gives us a value that represents a probability (bewteen 0 and 1) if the correct speaker said the correct keyword. The model is trained on 40 epochs and the loss and accuarcy functions are displayed in Fig. 3.
+The Neural Network used for OpenSesame is a Feed-Forward neural network, that implents 6 Dense layers. The first layer expands the feature vector from 40 to 256 dimensions. Every following layer decreases the dimensionality by a power of 2, namely 128, 64, 32, 16, 1. All layers use a Relu activation function, except the last layer. It uses a Sigmoid activation, which gives us a value that represents a probability (bewteen 0 and 1) if the correct speaker said the correct keyword. The model is trained on 40 epochs. The training results can be seen in the following parts:
 
-
-![](./images/plots_dense-nn-sr48000-epochs40-v8.png "Figure 3: Accuracy and Loss of the Training process")
+![](./src/feed-forward/plots/plots_dense-nn-sr48000-epochs40-v8.png "Figure 3: Accuracy and Loss of the Training process")
 Figure 3: Accuracy and Loss of the Training process
 
 
@@ -36,7 +35,7 @@ Since we unpack every recording into 197 individual vectors, we evaluate the tra
 
 Figure 4: Confusion Matrix of Prediction on all samples | Figure 5: Confusion Matrix of Prediction on all recordings
 :-------------------------:|:-------------------------:
-![](./images/heatmap_samples_dense-nn-sr48000-epochs40-v8.png "Figure 4: Confusion Matrix of NN Prediction on all samples")  |  ![](./images/heatmap_recordings_dense-nn-sr48000-epochs40-v8.png "Figure 5: Confusion Matrix of NN Prediction on all recordings")
+![](./src/feed-forward/plots/heatmap_samples_dense-nn-sr48000-epochs40-v9.png "Figure 4: Confusion Matrix of NN Prediction on all samples")  |  ![](./src/feed-forward/plots/heatmap_recordings_dense-nn-sr48000-epochs40-v9.png "Figure 5: Confusion Matrix of NN Prediction on all recordings")
 
 
 
@@ -48,12 +47,12 @@ Performance Metrics on individual samples:
 Classificaiton Report over all sample vectors:
               precision    recall  f1-score   support
 
-         0.0       0.75      0.79      0.77      3214
-         1.0       0.79      0.76      0.78      3484
+         0.0       0.68      0.78      0.73      2919
+         1.0       0.81      0.72      0.76      3779
 
-    accuracy                           0.77      6698
-   macro avg       0.77      0.77      0.77      6698
-weighted avg       0.77      0.77      0.77      6698
+    accuracy                           0.75      6698
+   macro avg       0.75      0.75      0.74      6698
+weighted avg       0.75      0.75      0.75      6698
 ```
 
 
@@ -63,24 +62,26 @@ Performance Metrics on recordings:
 Classificaiton Report over all recordings:
               precision    recall  f1-score   support
 
-         0.0       1.00      1.00      1.00        17
-         1.0       1.00      1.00      1.00        17
+         0.0       0.88      1.00      0.94        15
+         1.0       1.00      0.89      0.94        19
 
-    accuracy                           1.00        34
-   macro avg       1.00      1.00      1.00        34
-weighted avg       1.00      1.00      1.00        34
+    accuracy                           0.94        34
+   macro avg       0.94      0.95      0.94        34
+weighted avg       0.95      0.94      0.94        34
 ```
 
+
+As we can see our model performs well on predicting, if an entire recording contains the correct keyword, by the correct user. Thereofre, it is not as important to look at the results of the classification of every sample.
 
 
 
 #### **Support Vector Machine**
-The SVM model implements the default ```SVC()``` model provided by the sklearn library, which uses a radial basis function as the kernel.
+The SVM model implements the default ```SVC()``` model provided by the sklearn library, which uses a radial basis function as the kernel. After training we get the following results:
 
 
 Figure 5: Confusion Matrix of Prediction on all samples | Figure 6: Confusion Matrix of Prediction on all recordings
 :-------------------------:|:-------------------------:
-![](./images/heatmap_samples_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all samples")  |  ![](./images/heatmap_svm_recordings_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all recordings")
+![](./src/svm/plots/heatmap_samples_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all samples")  |  ![](./src/svm/plots/heatmap_svm_recordings_svmV2.png "Figure 6: Confusion Matrix of SVM Prediction on all recordings")
 
 
 
@@ -90,12 +91,12 @@ Performance metrics on all sample:
 Classificaiton Report over all sample vectors:
               precision    recall  f1-score   support
 
-         0.0       0.68      0.75      0.72      3021
-         1.0       0.78      0.71      0.74      3677
+         0.0       0.69      0.76      0.72      3042
+         1.0       0.78      0.71      0.75      3656
 
     accuracy                           0.73      6698
-   macro avg       0.73      0.73      0.73      6698
-weighted avg       0.73      0.73      0.73      6698
+   macro avg       0.73      0.74      0.73      6698
+weighted avg       0.74      0.73      0.74      6698
 ```
 
 Performance metrics on recordings:
@@ -111,8 +112,11 @@ Classification Report over all recordings:
 weighted avg       0.91      0.88      0.88        34
 ```
 
+The SVM does not classify as well on the test data, compared to the the NN. For our use-case it does not have to perform as well, as the neural network. However, it is still necessary to integerate the models for safety reasons. If we were to only rely on the NN, the probability that unathorised access is granted is higher, in case of a false positive. In contrast, if we use both models, they **both** have to classify the speaker as the correct one and identify the keyword. This feature gives us additional protection against possible intruders.
+
+
 #### **Training Data**
-For training we collected 136 recordings, which is split into 50% positive and 50% negative samples. Each recording is split into 197 vectors, which are fed to the model during training. For testing our model, we use the exact same strateg as for training.
+For training we collected 156 recordings, which is split into 50% positive and 50% negative samples. Each recording is split into 197 vectors, which are fed to the model during training. This results in 30,732 training samples per epoch. For testing our model, we use the exact same strategy as for training.
 
 
 |   | Recordings for Training | Recordings for Testing |
@@ -120,7 +124,6 @@ For training we collected 136 recordings, which is split into 50% positive and 5
 | Positive  | 78  | 17 |
 | Negative  | 78  | 17 |
 | Total  | 156  | 34 |
-
 
 
 ### **Project Structure**

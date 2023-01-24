@@ -62,8 +62,8 @@ model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy']
 X, y, _, _ = loadData(asTensor=False)
 X = X.reshape((X.shape[0]*X.shape[1], X.shape[2]))
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=42)
-
+#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 # %%
 
 # Train the model
@@ -74,7 +74,7 @@ history = model.fit(
     validation_data=(X_test, y_test)
 )
 
-name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v8"
+name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v9"
 # Plot accuarcy
 
 fig, ax = plt.subplots(1, 2, sharey=True)
