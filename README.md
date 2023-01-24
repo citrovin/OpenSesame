@@ -93,6 +93,6 @@ Lastly, in ```./Archives``` all of our work product is saved, also including dis
 
 This project is part of our graduate program, as part of the Business Intelligence Lecture. The team behind it consists of three graudate engineering students, currently enrolled in the EIT Autonomous Systems program at Polytech Nice-Sophia.
 
-1) Filippo Zeggio
-2) Philipp Ahrendt
-3) Dalim Wahby
+- Filippo Zeggio: https://github.com/curcuman
+- Philipp Ahrendt: https://github.com/phiahr
+- Dalim Wahby: https://github.com/citrovin
