@@ -83,10 +83,10 @@ if __name__== "__main__" :
     RECORDING_SECONDS = 2
     SAMPLE_RATE = 48000
     THRESHOLD_NN = 0.6
-    THRESHOLD_SVM = 0.65
-    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v7'
+    THRESHOLD_SVM = 0.75
+    MODEL_PATH = './feed-forward/models/dense-nn-sr48000-epochs40-v8'
     
-    model_nn = keras.models.load_model(MODEL_PATH)
+    model_nn = keras.models.load_model(MODEL_PATH)  
     
     with open(r"svm/models/svmV2.pickle", "rb") as input_file:
         model_svm = pickle.load(input_file)

@@ -76,25 +76,31 @@ history = model.fit(
 
 name = f"dense-nn-sr{SAMPLE_RATE}-epochs{EPOCHS}-v8"
 # Plot accuarcy
-plt.plot(history.history['accuracy'])
-plt.plot(history.history['val_accuracy'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper left')
+
+fig, ax = plt.subplots(1, 2, sharey=True)
+fig.set_size_inches(12, 5)
+
+ax[0].plot(history.history['accuracy'])
+ax[0].plot(history.history['val_accuracy'])
+ax[0].set_title('Model Accuracy')
+ax[0].set_ylabel('Accuracy')
+ax[0].set_xlabel('Epoch')
+ax[0].legend(['Train', 'Validation'], loc='upper left')
 #plt.show()
-plt.savefig(f'./plots/{name}_acc.png')
+#plt.savefig(f'./plots/{name}_acc.png')
 
 
 # Plot Loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper left')
-#plt.show()
-plt.savefig(f'./plots/{name}_loss.png')
+ax[1].plot(history.history['loss'])
+ax[1].plot(history.history['val_loss'])
+ax[1].set_title('Model Loss')
+ax[1].set_ylabel('Loss')
+ax[1].set_xlabel('Epoch')
+ax[1].legend(['Train', 'Validation'], loc='upper left')
+
+fig.savefig(f'./plots/plots_{name}.png')
+
+plt.close()
 
 # callbacks=[
 #     WandbMetricsLogger(log_freq=5),
@@ -117,6 +123,8 @@ X_test = X_test.reshape((X_test.shape[0]*X_test.shape[1], X_test.shape[2]))
 print(f'y test: {y_test}')
 print(f'y test shape: {y_test.shape}')
 
+
+
 #print(number_recordings)
 
 result = model.predict(X_test)
@@ -135,10 +143,19 @@ print(f'Result2 shape: {len(result2)}')
 # %%
 
 
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
 print('Classificaiton Report over all sample vectors:')
 print(classification_report(result2, y_test))
 
+labels_cf_matrix = ['True Neg','False Pos','False Neg','True Pos']
+labels_cf_matrix = np.asarray(labels_cf_matrix).reshape(2,2)
+
+cf_matrix = confusion_matrix(y_test, result2)
+heatmap_sns = sns.heatmap(cf_matrix, annot=labels_cf_matrix, cmap='Blues', fmt='')
+heatmap_sns.get_figure().savefig(f'./plots/heatmap_samples_{name}.png')
+
+plt.close()
 # %%
 #result_samples = np.array([np.mean(result[(i*197)+20:((i+1)*197)-20]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
 #true_samples = np.array([np.mean(y_test[i*197:(i+1)*197]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
@@ -170,6 +187,10 @@ y_true = np.array(true_samples)
 
 print('Classificaiton Report over all recordings:')
 print(classification_report(y_pred, y_true))
+
+cf_rec_matrix = confusion_matrix(y_true, y_pred)
+heatmap_rec_sns = sns.heatmap(cf_matrix, annot=labels_cf_matrix, cmap='Blues', fmt='')
+heatmap_rec_sns.get_figure().savefig(f'./plots/heatmap_recordings_{name}.png')
 
 
 # %%

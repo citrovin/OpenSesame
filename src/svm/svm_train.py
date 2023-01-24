@@ -103,76 +103,11 @@ print(f'y test shape: {y_test.shape}')
 #print(number_recordings)
 
 result = clf.predict(X_test)
-
-result2 = np.array([])
-for res in result:
-    if res[0]>=0.3:
-        result2 = np.append(result2, 1.0)
-    else:
-        result2 = np.append(result2, 0.0)
-
-print(f'Result shape: {result.shape}')
-print(f'Result2 shape: {len(result2)}')
-
-
-# %%
-
-
-from sklearn.metrics import classification_report
-print('Classificaiton Report over all sample vectors:')
-print(classification_report(result2, y_test))
-
-# %%
-#result_samples = np.array([np.mean(result[(i*197)+20:((i+1)*197)-20]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
-#true_samples = np.array([np.mean(y_test[i*197:(i+1)*197]) for i, k in enumerate(range(result.shape[0])) if k%samples_per_rec==0])
-
-
-
-result_samples = [[]]*number_recordings
-true_samples = [[]]*number_recordings
-THRESHOLD = 0.5
-
-
-i = 0
-for k in range(result.shape[0]):
-    if k%samples_per_rec==0:
-        # print(i)
-        result_samples[i] = np.mean(result[i*samples_per_rec:(i+1)*samples_per_rec])
-        true_samples[i] = np.mean(y_test[i*samples_per_rec:(i+1)*samples_per_rec])
-
-        i+=1
-
-for i, res in enumerate(result_samples):
-    if res>THRESHOLD:
-        result_samples[i]=1.0
-    else:
-        result_samples[i]=0.0
-
-y_pred = np.array(result_samples)
-y_true = np.array(true_samples)
-
-print('Classificaiton Report over all recordings:')
-print(classification_report(y_pred, y_true))
-
-#%%
-_, _, X_test, y_test = loadData(asTensor=False)
-
-result = clf.predict(X_test)
 print(result.shape)
 
-_, _, X_test, y_test = loadData(asTensor=False)
-
-number_recordings=X_test.shape[0]
-samples_per_rec = X_test.shape[1]
-
-X_test = X_test.reshape((X_test.shape[0]*X_test.shape[1], X_test.shape[2]))
-
-print(f'y test: {y_test}')
-print(f'y test shape: {y_test.shape}')
-
 result2 = np.array([])
 for res in result:
-    if res[0]>=0.3:
+    if res>=0.3:
         result2 = np.append(result2, 1.0)
     else:
         result2 = np.append(result2, 0.0)
@@ -185,7 +120,7 @@ print(f'Result2 shape: {len(result2)}')
 
 
 from sklearn.metrics import classification_report
-print('Classificaiton Report over all sample vectors:')
+print('Classification Report over all sample vectors:')
 print(classification_report(result2, y_test))
 
 # %%
@@ -217,7 +152,5 @@ for i, res in enumerate(result_samples):
 y_pred = np.array(result_samples)
 y_true = np.array(true_samples)
 
-print('Classificaiton Report over all recordings:')
+print('Classification Report over all recordings:')
 print(classification_report(y_pred, y_true))
-
-# %%
