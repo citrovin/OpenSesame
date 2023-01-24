@@ -19,7 +19,7 @@ Figure 1: Logic of OpenSesame
 
 4) Decision: If both thresholds of the NN **and** the SVM are supassed, then and only then the system unlocks. Using two different models, gives us a kind of fail-safe, for the case that the NN or the SVM somehow predicts a high value, eventhoug it should not have. The unlock screen, as shown in Fig. 2.
 
-![](./images/OpenSesame.gif "Figure 2: Unlock Screen")
+![](./images/OpenSesame.gif "Figure 2: Unlock Screen")<br>
 Figure 2: Unlock Screen
 
 ---
