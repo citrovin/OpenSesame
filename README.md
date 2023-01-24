@@ -5,15 +5,15 @@
 OpenSesame is a software for speaker identification and speach recognition system. It leverages a Neural Network and a Support Vector Machine to identify if the correct speaker said the correct keyword, such as "open sesame". After detecting the speaker and the key word, the program is to unlock the data, lock, or whatever is connected to the software.
 
 ### **How does OpenSesame work?**
-OpenSesame consists of 4 parts: 1) live recording, 2) NN, 3) SVM, and 4) the decision block, as shown in Fig. 1. In the following, we will shortly introduce the main components of the program.
+OpenSesame consists of 4 parts: 1) live recording, 2) neural network, 3) support vector machine, and 4) the decision block, as shown in Fig. 1. In the following, we will shortly introduce the main components of the program.
 
 ![](./images/logic.png "Figure 1: Logic of OpenSesame")
 
 1) Live Recording: OpenSesame records live data to identify if the keyword has been said by the correct user in real time. The recordings are saves in three wave files, that overlap to catch the case if the keyword is split onto two different recordings. The prediction is then run over the three recordings.
 
-2) NN: The neural network computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.6, the system recognises that the correct speaker said the correct keyword.
+2) Neural Network (NN): The neural network computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.6, the system recognises that the correct speaker said the correct keyword.
 
-3) SVM: The SVM computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.75, the system recognises that the correct speaker said the correct keyword.
+3) Support Vector Machine (SVM): The SVM computes a prediction value of between 0 and 1. If it surpasses the threshold of 0.75, the system recognises that the correct speaker said the correct keyword.
 
 4) Decision: If both thresholds of the NN and the SVM are supassed, then and only then the system unlocks. Using two different models, gives us a kind of fail-safe, for the case that the NN or the SVM somehow predicts a high value, eventhoug it should not have. The unlock screen, as shown in Fig. 2 will appear.
 
@@ -51,13 +51,13 @@ For training we collected 136 recordings, which is split into 50% positive and 5
 ├── requirements.txt
 └── src
     ├── main.py
-    └── utils
-        ├── __init__.py
-        ├── closed_lock.txt
-        ├── im2a.py
-        ├── open_lock.txt
-        ├── preprocess_data.py
-        └── record.py
+    ├── utils
+    │   ├── __init__.py
+    │   ├── closed_lock.txt
+    │   ├── im2a.py
+    │   ├── open_lock.txt
+    │   ├── preprocess_data.py
+    │   └── record.py
     ├── feed-forward
     │   ├── feed-forward_train.py
     │   ├── models
@@ -73,21 +73,25 @@ For training we collected 136 recordings, which is split into 50% positive and 5
     │   ├── plots
     │   ├── rnn-validate.py
     │   └── rnn_train.py
-    ├── svm
-    │   ├── models
-    │   ├── old
-    │   └── svm_train.py
+    └── svm
+        ├── models
+        ├── old
+        └── svm_train.py
 ```
 
-- Main
-- Data preprocessing for training
-- Training the models
+All code is stored in the ```./src``` directory. It contains the ```main.py``` file, that contains the actual program, implementing the logic and the used models. Additionally, there are further models (i.e. ```./src/rnn``` ), that were used for training, however were not seen as feasible due to computation costs or other factors that have to be taken into account.
+
+Every directory named after a model, i.e. ```./src/feed-forward``` contain the training file of the models and the trained models, that are used in ```main.py```.
+
+The ```./src/utils``` directory contains all the files needed to record and preprocess our training and testing data.
+
+Lastly, in ```./Archives``` all of our work product is saved, also including disregarded approaches.
+
 
 
 ### **Team**
 
-The team behind this project consists of three graudate engineering students, currently enrolled in the EIT Autonomous Systems program at Polytech Nice-Sophia.
-
+This project is part of our graduate program, as part of the Business Intelligence Lecture. The team behind it consists of three graudate engineering students, currently enrolled in the EIT Autonomous Systems program at Polytech Nice-Sophia.
 
 1) Filippo Zeggio
 2) Philipp Ahrendt
