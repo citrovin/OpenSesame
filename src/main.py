@@ -40,7 +40,7 @@ def speaker_identification(
     # print(f'SVM: {score_svm} | NN: {score_nn} | Total: {score} | Threshold: {THRESHOLD_TOTAL}')
     global counter
     if counter == 1:
-        print("Lock the door again")
+        os.system('clear')
         with open('ascii_art/closed_lock.txt', 'r') as f:
             l = f.read()
             print(l)
